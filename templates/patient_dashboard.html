@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Patient Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f9ff;
+            --border-color: #e1e8f5;
+            --text-color: #2c3e50;
+            --success-color: #2ecc71;
+            --warning-color: #f1c40f;
+            --danger-color: #e74c3c;
+            --gradient-primary: linear-gradient(135deg, #a8e0ff 0%, #ffd1dc 100%);
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--shadow-soft);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand img.logo {
+            height: 40px;
+        }
+
+        .navbar-nav {
+            gap: 10px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--gradient-primary);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+
+        .user-section {
+            gap: 15px;
+        }
+
+        .welcome-text {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .btn-login,
+        .btn-logout {
+            padding: 8px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-logout {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-login:hover,
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-soft);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 991px) {
+            .navbar-nav {
+                padding: 20px 0;
+            }
+
+            .nav-link {
+                padding: 10px 15px;
+            }
+
+            .user-section {
+                margin-top: 15px;
+                justify-content: center;
+            }
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-top: 100px;
+            /* Add this line */
+            transition: all 0.3s ease;
+        }
+
+        .patient-rating {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .slot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .slot {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slot::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary-color);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .slot:hover::before {
+            transform: scaleX(1);
+        }
+
+        .slot:hover:not(.booked) {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .slot.booked {
+            background-color: #ffebee;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .slot.pending {
+            background-color: #fff3e0;
+        }
+
+        .slot.accepted {
+            background-color: #e8f5e9;
+        }
+
+        .appointment-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .appointment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .cancel-form {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .cancel-form textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            resize: vertical;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        button.cancel-btn {
+            background-color: var(--danger-color);
+        }
+
+        .date-picker {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="static/chikitsa.png" alt="CHIKITSA Logo" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('chat') }}">
+                            <i class="fas fa-comments"></i>
+                            <span>Consultation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('talk_to_me') }}">
+                            <i class="fas fa-microphone"></i>
+                            <span>Voice Support</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('image_analysis') }}">
+                            <i class="fas fa-image"></i>
+                            <span>Image analysis</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/closed_ended">
+                            <i class="fas fa-star"></i>
+                            <span>Wellness Path</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('mood_tracker') }}">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Emotion Analytics</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/meditation">
+                            <i class="fas fa-spa"></i>
+                            <span>Meditate</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('personal_info') }}">
+                            <i class="fas fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center user-section">
+                    {% if session.username %}
+                    <span class="welcome-text">Welcome, {{ session.username }}</span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-logout">Sign Out</a>
+                    {% else %}
+                    <a class="btn btn-login" href="{{ url_for('login') }}">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div id="userStats" class="patient-rating"></div>
+        <h1>Book Appointment</h1>
+
+        <input type="date" id="dateSelect" class="date-picker" min="" onchange="updateSlots()">
+
+        <div class="slot-grid" id="slotGrid"></div>
+
+        <h2>My Appointments</h2>
+        <div id="appointmentsList" class="appointments"></div>
+    </div>
+
+    <script>
+
+
+        // Set min date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('dateSelect').min = today;
+
+        function generateTimeSlots() {
+            fetch('/api/available-slots')
+                .then(response => response.json())
+                .then(slots => {
+                    const slotGrid = document.getElementById('slotGrid');
+                    slotGrid.innerHTML = slots.map(time => `
+                         <div class="slot" data-time="${time}">${time}</div>
+                     `).join('');
+                    updateSlots();
+                });
+        }
+
+
+        function generateTimeSlots() {
+            fetch('/api/available-slots')
+                .then(response => response.json())
+                .then(slots => {
+                    const slotGrid = document.getElementById('slotGrid');
+                    slotGrid.innerHTML = slots.map(time => `
+                        <div class="slot" data-time="${time}">${time}</div>
+                    `).join('');
+                    updateSlots();
+                });
+        }
+
+
+
+        function updateSlots() {
+            const date = document.getElementById('dateSelect').value;
+            fetch('/api/appointments')
+                .then(response => response.json())
+                .then(appointments => {
+                    const slots = document.querySelectorAll('.slot');
+                    slots.forEach(slot => {
+                        slot.className = 'slot';
+                        const isBooked = appointments.some(a =>
+                            a.date === date &&
+                            a.slot === slot.dataset.time
+                        );
+                        if (isBooked) {
+                            slot.classList.add('booked');
+                        }
+                    });
+                });
+        }
+
+
+        function loadUserStats() {
+            fetch('/api/user/stats')
+                .then(response => response.json())
+                .then(stats => {
+                    const statsDiv = document.getElementById('userStats');
+                    statsDiv.innerHTML = `
+                        <div class="rating-${stats.rating}">
+                            Patient Rating: ${stats.rating.toUpperCase()}
+                            (Total Appointments: ${stats.total_appointments}, 
+                            Cancellations: ${stats.total_cancellations})
+                        </div>
+                    `;
+                });
+        }
+
+
+
+        function bookAppointment(date, slot) {
+            if (!date) {
+                showError('Please select a date');
+                return;
+            }
+
+            const selectedDate = new Date(date);
+            const selectedTime = slot.split('-')[0]; // Get start time
+            const [hours, minutes] = selectedTime.split(':');
+
+            selectedDate.setHours(parseInt(hours), parseInt(minutes));
+            const now = new Date();
+
+            if (selectedDate < today) {
+                showError('Cannot book appointments in the past');
+                return;
+            }
+
+            if (selectedDate.getDay() === 0 || selectedDate.getDay() === 6) {
+                showError('Appointments not available on weekends');
+                return;
+            }
+
+            fetch('/api/appointments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ date, slot })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.error || 'Booking failed');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    showSuccess('Appointment booked successfully');
+                    loadAppointments();
+                    updateSlots();
+                })
+                .catch(error => {
+                    showError(error.message);
+                });
+        }
+
+
+        function showError(message) {
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-error';
+            alert.textContent = message;
+            document.querySelector('.container').prepend(alert);
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        function showSuccess(message) {
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-success';
+            alert.textContent = message;
+            document.querySelector('.container').prepend(alert);
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+
+        function cancelAppointment(appointmentId) {
+            const form = document.getElementById(`cancelForm-${appointmentId}`);
+            form.style.display = 'block';
+        }
+
+        function submitCancellation(appointmentId) {
+            const reason = document.getElementById(`cancelReason-${appointmentId}`).value;
+            if (!reason) {
+                alert('Please provide a reason for cancellation');
+                return;
+            }
+
+            fetch(`/api/appointments/cancel/${appointmentId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ reason })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        loadAppointments();
+                        loadUserStats();
+                    }
+                });
+        }
+
+
+        function loadAppointments() {
+            fetch('/api/appointments')
+                .then(response => response.json())
+                .then(appointments => {
+                    const list = document.getElementById('appointmentsList');
+                    list.innerHTML = appointments.map(appointment => {
+                        const appointmentDate = new Date(appointment.date);
+                        const [startTime] = appointment.slot.split('-');
+                        const [hours, minutes] = startTime.split(':');
+                        appointmentDate.setHours(parseInt(hours), parseInt(minutes));
+
+                        const now = new Date();
+                        const endTime = new Date(appointmentDate);
+                        endTime.setHours(endTime.getHours() + 1); // Assuming 1-hour slots
+
+                        const showMeetLink = appointment.status === 'accepted' &&
+                            now >= appointmentDate &&
+                            now <= endTime;
+
+                        return `
+                            <div class="appointment-card status-${appointment.status}">
+                                <div>Date: ${appointment.date}</div>
+                                <div>Time: ${appointment.slot}</div>
+                                <div>Status: ${appointment.status}</div>
+                                ${appointment.cancellation_reason ?
+                                `<div>Cancellation Reason: ${appointment.cancellation_reason}</div>` : ''}
+                                ${showMeetLink && appointment.meet_link ?
+                                `<a href="${appointment.meet_link}" target="_blank" class="btn btn-primary">
+                                        Enter Room
+                                     </a>` : ''}
+                                ${appointment.status === 'pending' ? `
+                                    <button onclick="cancelAppointment(${appointment.id})">Cancel</button>
+                                    <div id="cancelForm-${appointment.id}" class="cancel-form" style="display: none;">
+                                        <textarea id="cancelReason-${appointment.id}" 
+                                            placeholder="Please provide reason for cancellation"></textarea>
+                                        <button onclick="submitCancellation(${appointment.id})">Submit</button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('');
+                });
+        }
+
+
+        document.getElementById('slotGrid').addEventListener('click', (e) => {
+            if (e.target.classList.contains('slot') && !e.target.classList.contains('booked')) {
+                const date = document.getElementById('dateSelect').value;
+                if (!date) {
+                    alert('Please select a date first');
+                    return;
+                }
+                bookAppointment(date, e.target.dataset.time);
+            }
+        });
+
+
+        // Initial load
+        generateTimeSlots();
+        loadUserStats();
+        loadAppointments();
+    </script>
+</body>
+
+</html>

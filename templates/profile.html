@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - {{ username }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .section { margin: 2rem 0; }
+        .card { background: #f9f9f9; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .table-auto th, .table-auto td { padding: 0.5rem; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6 text-center">Welcome, {{ username }}!</h1>
+        
+        <!-- Traction Section -->
+        <div class="section">
+            <h2 class="text-2xl font-semibold mb-4">Your Activity Traction</h2>
+            <div class="card">
+                <p><strong>Total Logins:</strong> {{ traction.total_logins }}</p>
+                <p><strong>Total Games Played:</strong> {{ traction.total_games_played }}</p>
+                <p><strong>Logins (Last 30 Days):</strong> {{ traction.recent_logins_30d }}</p>
+                <p><strong>Games Played (Last 30 Days):</strong> {{ traction.recent_games_30d }}</p>
+                <p><strong>Last Login:</strong> {{ traction.last_login }}</p>
+                <p><strong>Last Game Played:</strong> {{ traction.last_game }}</p>
+            </div>
+        </div>
+        
+        <!-- Mental State Section -->
+        <div class="section">
+            <h2 class="text-2xl font-semibold mb-4">Your Mental State</h2>
+            <div class="card">
+                <p><strong>Close-Ended Responses:</strong> {{ mental_state.close_ended_responses }}</p>
+                <p><strong>Open-Ended Responses:</strong> {{ mental_state.open_ended_responses }}</p>
+                <p><strong>Positive Responses:</strong> {{ mental_state.positive_responses }}</p>
+                <p><strong>Negative Responses:</strong> {{ mental_state.negative_responses }}</p>
+                <p><strong>Wellness Report Preview:</strong> {{ mental_state.wellness_report_snippet }}</p>
+                <a href="{{ url_for('wellness_report') }}" class="text-blue-600 hover:underline">View Full Wellness Report</a>
+            </div>
+        </div>
+        
+        <!-- Mental Health Indicators Section -->
+        <div class="section">
+            <h2 class="text-2xl font-semibold mb-4">Key Mental Health Indicators</h2>
+            <div class="card">
+                {% if mental_health_indicators %}
+                <table class="table-auto w-full text-left">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th>Metric</th>
+                            <th>Value</th>
+                            <th>Mental Health Implication</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Total Responses</td><td>{{ mental_health_indicators.total_responses }}</td><td>-</td></tr>
+                        <tr><td>Correct Responses</td><td>{{ mental_health_indicators.correct_responses }}</td><td>Attention & perception</td></tr>
+                        <tr><td>Incorrect Responses</td><td>{{ mental_health_indicators.incorrect_responses }}</td><td>Cognitive interference</td></tr>
+                        <tr><td>Average Reaction Time</td><td>{{ mental_health_indicators.avg_reaction_time }} seconds</td><td>Processing speed</td></tr>
+                        <tr><td>Fastest Reaction Time</td><td>{{ mental_health_indicators.fastest_reaction_time }} seconds</td><td>Alertness</td></tr>
+                        <tr><td>Slowest Reaction Time</td><td>{{ mental_health_indicators.slowest_reaction_time }} seconds</td><td>Cognitive fatigue</td></tr>
+                        <tr><td>Accuracy Rate</td><td>{{ mental_health_indicators.accuracy_rate }}%</td><td>Lower than average</td></tr>
+                        <tr><td>Cognitive Control Consistency</td><td>{{ mental_health_indicators.cognitive_control_consistency }}</td><td>Possible distraction/fatigue</td></tr>
+                        <tr><td>Mental Fatigue Score</td><td>{{ mental_health_indicators.mental_fatigue_score }}</td><td>Higher indicates fatigue</td></tr>
+                        <tr><td>Consistency Score</td><td>{{ mental_health_indicators.consistency_score }}</td><td>High = mental strain</td></tr>
+                    </tbody>
+                </table>
+                {% else %}
+                <p>No mental health indicators available.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Psychiatrist Recommendations -->
+        <div class="section">
+            <h2 class="text-2xl font-semibold mb-4">Psychiatrist Recommendations</h2>
+            <div class="card">
+                <ul class="list-disc pl-5">
+                    {% for recommendation in recommendations %}
+                        <li>{{ recommendation }}</li>
+                    {% endfor %}
+                    {% if not recommendations %}
+                        <li>No specific recommendations at this time.</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Visualizations -->
+        <div class="section">
+            <h2 class="text-2xl font-semibold mb-4">Cognitive Performance Visualizations</h2>
+            <div class="card mb-6" id="cognitivePerformanceSection">
+                <h3 class="text-xl font-semibold mb-2">Cognitive Performance Graph</h3>
+                <canvas id="cognitivePerformanceChart" width="400" height="200"></canvas>
+            </div>
+            <div class="card mb-6" id="accuracyHeatmapSection">
+                <h3 class="text-xl font-semibold mb-2">Accuracy Heatmap</h3>
+                <canvas id="accuracyHeatmapChart" width="400" height="200"></canvas>
+            </div>
+            <div class="card" id="attentionDriftSection">
+                <h3 class="text-xl font-semibold mb-2">Attention Drift Timeline</h3>
+                <canvas id="attentionDriftChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="mt-6 text-center">
+            <a href="{{ url_for('home') }}" class="text-blue-600 hover:underline mr-4">Back to Home</a>
+            <a href="{{ url_for('logout') }}" class="text-red-600 hover:underline">Logout</a>
+        </div>
+    </div>
+
+    <script>
+        // Ensure chart_data is defined
+        const chartData = {{ chart_data | tojson | safe }};
+
+        // Function to initialize charts only if data is available
+        function initializeCharts() {
+            // Cognitive Performance Graph
+            const cognitivePerformanceChart = document.getElementById('cognitivePerformanceChart');
+            const cognitivePerformanceSection = document.getElementById('cognitivePerformanceSection');
+            if (chartData.cognitive_performance && chartData.cognitive_performance.labels.length > 0) {
+                new Chart(cognitivePerformanceChart, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.cognitive_performance.labels,
+                        datasets: [{
+                            label: 'Reaction Time (seconds)',
+                            data: chartData.cognitive_performance.reaction_times,
+                            backgroundColor: chartData.cognitive_performance.correctness,
+                            borderColor: chartData.cognitive_performance.correctness,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: 'Reaction Time (seconds)' } },
+                            x: { title: { display: true, text: 'Response' } }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            } else {
+                cognitivePerformanceSection.classList.add('hidden');
+            }
+
+            // Accuracy Heatmap
+            const accuracyHeatmapChart = document.getElementById('accuracyHeatmapChart');
+            const accuracyHeatmapSection = document.getElementById('accuracyHeatmapSection');
+            if (chartData.accuracy_heatmap && chartData.accuracy_heatmap.labels.length > 0) {
+                new Chart(accuracyHeatmapChart, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.accuracy_heatmap.labels,
+                        datasets: [{
+                            label: 'Correct Responses',
+                            data: chartData.accuracy_heatmap.data,
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: 'Correct Responses' } },
+                            x: { title: { display: true, text: 'Word-Color Pair' } }
+                        }
+                    }
+                });
+            } else {
+                accuracyHeatmapSection.classList.add('hidden');
+            }
+
+            // Attention Drift Timeline
+            const attentionDriftChart = document.getElementById('attentionDriftChart');
+            const attentionDriftSection = document.getElementById('attentionDriftSection');
+            if (chartData.attention_drift && chartData.attention_drift.labels.length > 0) {
+                new Chart(attentionDriftChart, {
+                    type: 'line',
+                    data: {
+                        labels: chartData.attention_drift.labels,
+                        datasets: [
+                            {
+                                label: 'Reaction Time (seconds)',
+                                data: chartData.attention_drift.reaction_times,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y1'
+                            },
+                            {
+                                label: 'Correctness (1=Correct, 0=Incorrect)',
+                                data: chartData.attention_drift.correctness,
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y2'
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            y1: { 
+                                beginAtZero: true, 
+                                position: 'left', 
+                                title: { display: true, text: 'Reaction Time (seconds)' } 
+                            },
+                            y2: { 
+                                beginAtZero: true, 
+                                position: 'right', 
+                                title: { display: true, text: 'Correctness' }, 
+                                max: 1 
+                            },
+                            x: { title: { display: true, text: 'Response' } }
+                        }
+                    }
+                });
+            } else {
+                attentionDriftSection.classList.add('hidden');
+            }
+        }
+
+        // Initialize charts only after DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            if (chartData && Object.keys(chartData).length > 0) {
+                initializeCharts();
+            } else {
+                console.warn('No chart data available');
+                document.getElementById('cognitivePerformanceSection').classList.add('hidden');
+                document.getElementById('accuracyHeatmapSection').classList.add('hidden');
+                document.getElementById('attentionDriftSection').classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

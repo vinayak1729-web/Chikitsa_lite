@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Tracker - Chikitsa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+    <style>
+        :root{
+            --gradient-primary: linear-gradient(135deg, #a8e0ff 0%, #ffd1dc 100%);
+        }
+        body {
+            font-family: 'Lora', serif;
+            background: linear-gradient(135deg, #e0f7fa 0%, #f3e5f5 100%);
+            min-height: 100vh;
+        }
+
+        .mood-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .mood-btn {
+            font-size: 2rem;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .mood-btn:hover {
+            transform: scale(1.2);
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--shadow-soft);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand img.logo {
+            height: 40px;
+        }
+
+        .navbar-nav {
+            gap: 10px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--gradient-primary);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+
+        .user-section {
+            gap: 15px;
+        }
+
+        .welcome-text {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        
+    .btn-login,
+    .btn-logout {
+        padding: 8px 20px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-login {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .btn-logout {
+        background: var(--accent-color);
+        color: white;
+    }
+
+    .btn-login:hover,
+    .btn-logout:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-soft);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 991px) {
+        .navbar-nav {
+            padding: 20px 0;
+        }
+
+        .nav-link {
+            padding: 10px 15px;
+        }
+    }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="static/chikitsa.png" alt="CHIKITSA Logo" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('chat') }}">
+                            <i class="fas fa-comments"></i>
+                            <span>Consultation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('talk_to_me') }}">
+                            <i class="fas fa-microphone"></i>
+                            <span>Voice Support</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('image_analysis') }}">
+                            <i class="fas fa-image"></i>
+                            <span>Image analysis</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('personal_info') }}">
+                            <i class="fas fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center user-section">
+                    {% if session.username %}
+                    <span class="welcome-text">Welcome, {{ session.username }}</span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-logout">Sign Out</a>
+                    {% else %}
+                    <a class="btn btn-login" href="{{ url_for('login') }}">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+<br><br>
+    <div class="container">
+        <div class="mood-card mt-5">
+            <h2 class="text-center mb-4">How are you feeling today?</h2>
+            <div class="text-center">
+                <button class="mood-btn" onclick="logMood('happy')">😊</button>
+                <button class="mood-btn" onclick="logMood('excited')">🤗</button>
+                <button class="mood-btn" onclick="logMood('neutral')">😐</button>
+                <button class="mood-btn" onclick="logMood('sad')">😔</button>
+                <button class="mood-btn" onclick="logMood('angry')">😠</button>
+            </div>
+        </div>
+        <div class="mood-card">
+            <h3>Mood Trends</h3>
+            <canvas id="moodChart" height="200"></canvas>
+        </div>
+
+        <div class="mood-card">
+            <h3>Your Mood History</h3>
+            <div id="moodHistory">
+                Mood history will be populated here
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let moodChart;
+        const moodScores = {
+            'happy': 2,
+            'excited': 1.5,
+            'neutral': 1,
+            'sad': 0.5,
+            'angry': -1
+        };
+
+        const moodEmojis = {
+            'happy': '😊',
+            'excited': '🤗',
+            'neutral': '😐',
+            'sad': '😔',
+            'angry': '😠'
+        };
+
+        function createMoodChart(moodData) {
+            const ctx = document.getElementById('moodChart').getContext('2d');
+
+            const chartData = moodData.map(entry => ({
+                x: new Date(entry.timestamp),
+                y: moodScores[entry.mood],
+                mood: entry.mood
+            }));
+
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Mood Level',
+                        data: chartData,
+                        borderColor: '#7e57c2',
+                        backgroundColor: 'rgba(126, 87, 194, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#7e57c2'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    // Update the scales options in createMoodChart function
+                    scales: {
+                        y: {
+                            min: -2.5,   // Adjusted min to accommodate angry (-2)
+                            max: 2.5,
+                            ticks: {
+                                callback: function (value) {
+                                    const mood = Object.entries(moodScores).find(([k, v]) => v === value);
+                                    if (mood) {
+                                        return `${mood[0]} ${moodEmojis[mood[0]]}`;  // Shows both mood text and emoji
+                                    }
+                                    return '';
+                                },
+                                font: {
+                                    family: 'Lora',
+                                    size: 14
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day',
+                                displayFormats: {
+                                    day: 'MMM d'
+                                }
+                            }
+                        }
+                    }
+                    ,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const mood = context.raw.mood;
+                                    return `Mood: ${moodEmojis[mood]} (${mood})`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateMoodHistory() {
+            fetch('/get_moods')
+                .then(response => response.json())
+                .then(data => {
+                    // Update text history
+                    const historyDiv = document.getElementById('moodHistory');
+                    historyDiv.innerHTML = data.moods.map(mood => `
+                    <div class="d-flex align-items-center justify-content-between p-2 border-bottom">
+                        <span>${moodEmojis[mood.mood]}</span>
+                        <span>${new Date(mood.timestamp).toLocaleString()}</span>
+                    </div>
+                `).join('');
+
+                    // Update chart
+                    if (moodChart) {
+                        moodChart.destroy();
+                    }
+                    moodChart = createMoodChart(data.moods);
+                });
+        }
+
+        function logMood(mood) {
+            const timestamp = new Date().toISOString();
+            fetch('/log_mood', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    mood: mood,
+                    timestamp: timestamp
+                })
+            })
+                .then(response => response.json())
+                .then(() => updateMoodHistory());
+        }
+
+        // Initial load
+        updateMoodHistory();
+    </script>
+</body>
+
+</html>

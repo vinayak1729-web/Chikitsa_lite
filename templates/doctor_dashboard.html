@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Doctor Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f9ff;
+            --border-color: #e1e8f5;
+            --text-color: #2c3e50;
+            --success-color: #2ecc71;
+            --warning-color: #f1c40f;
+            --danger-color: #e74c3c;
+            --gradient-primary: linear-gradient(135deg, #a8e0ff 0%, #ffd1dc 100%);
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--shadow-soft);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand img.logo {
+            height: 40px;
+        }
+
+        .navbar-nav {
+            gap: 10px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--gradient-primary);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+
+        .user-section {
+            gap: 15px;
+        }
+
+        .welcome-text {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .btn-login,
+        .btn-logout {
+            padding: 8px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-logout {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-login:hover,
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-soft);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 991px) {
+            .navbar-nav {
+                padding: 20px 0;
+            }
+
+            .nav-link {
+                padding: 10px 15px;
+            }
+
+            .user-section {
+                margin-top: 15px;
+                justify-content: center;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-top: 100px; /* Add this line */
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .appointment-card {
+            right: -50px;
+            width: calc(100% - 420px); /* Adjusted width */
+            margin-right: 420px; /* Added margin */
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .appointment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-color);
+        }
+
+        .appointment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .patient-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .rating-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            transition: transform 0.2s ease;
+        }
+
+        .rating-blue {
+            background-color: #3498db;
+        }
+
+        .rating-white {
+            background-color: #bdc3c7;
+        }
+
+        .rating-red {
+            background-color: #e74c3c;
+        }
+
+        .status-pending {
+            background-color: #fff8e1;
+        }
+
+        .status-accepted {
+            background-color: #e8f5e9;
+        }
+
+        .status-rejected {
+            background-color: #ffebee;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .actions button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .accept-btn {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .reject-btn {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .actions button:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        .cancellation-reason {
+            color: var(--danger-color);
+            font-style: italic;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background-color: #ffebee;
+            border-radius: 4px;
+        }
+
+        .patient-info-container {
+            position: fixed;  /* Changed from absolute */
+            right: 20px;     /* Changed from -420px */
+            top: 120px;       /* Added top margin for navbar */
+            width: 400px;
+            max-height: calc(100vh - 100px); /* Added max-height */
+            overflow-y: auto;  /* Added scrolling */
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+        }
+
+        .info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .info-body {
+            padding: 20px;
+        }
+
+        .basic-info,
+        .appointment-stats {
+            margin-bottom: 20px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .stat-item {
+            background: var(--secondary-color);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab-btn {
+            padding: 8px 16px;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .response {
+            background: #f8f9fa;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="{{ url_for('static', filename='chikitsa.png') }}" alt="CHIKITSA Logo" class="logo"> </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('chat') }}">
+                            <i class="fas fa-comments"></i>
+                            <span>Consultation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('talk_to_me') }}">
+                            <i class="fas fa-microphone"></i>
+                            <span>Voice Support</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('image_analysis') }}">
+                            <i class="fas fa-image"></i>
+                            <span>Image analysis</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/closed_ended">
+                            <i class="fas fa-star"></i>
+                            <span>Wellness Path</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('mood_tracker') }}">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Emotion Analytics</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/meditation">
+                            <i class="fas fa-spa"></i>
+                            <span>Meditate</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('personal_info') }}">
+                            <i class="fas fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center user-section">
+                    {% if session.username %}
+                    <span class="welcome-text">Welcome, {{ session.username }}</span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-logout">Sign Out</a>
+                    {% else %}
+                    <a class="btn btn-login" href="{{ url_for('login') }}">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Doctor Dashboard</h1>
+        <div id="appointmentsList"></div>
+        <div class="patient-info-container" style="display: none;">
+            <div class="info-header">
+                <h3>Patient Information</h3>
+                <button class="close-btn" onclick="this.parentElement.parentElement.style.display='none'">&times;</button>
+            </div>
+            <div class="info-body">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="showTab('basicInfo')">Basic Details</button>
+                    <button class="tab-btn" onclick="showTab('questionnaire')">Questionnaire Responses</button>
+                </div>
+                <div id="basicInfo" class="tab-content active">
+                    <div id="basicInfoContent"></div>
+                    <div id="wellnessReport"></div>
+                </div>
+                <div id="questionnaire" class="tab-content">
+                    <h4>Close-ended Responses</h4>
+                    <div id="closeEndedResponses"></div>
+                    <h4>Open-ended Responses</h4>
+                    <div id="openEndedResponses"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        function updateAppointmentStatus(appointmentId, status) {
+            fetch(`/api/appointments/${appointmentId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: status })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        loadAppointments();
+                    } else {
+                        throw new Error('Failed to update appointment');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to update appointment status');
+                });
+        }
+
+        function loadAppointments() {
+            fetch('/api/doctor/appointments')
+                .then(response => response.json())
+                .then(appointments => {
+                    const list = document.getElementById('appointmentsList');
+                    list.innerHTML = appointments.map(appointment => `
+                        <div class="appointment-card status-${appointment.status.toLowerCase()}" data-patient="${appointment.patient}">
+                            <div class="patient-info">
+                                <div class="rating-indicator rating-${appointment.patient_rating}"></div>
+                                <strong>Patient:</strong> ${appointment.patient}
+                            </div>
+                            <div class="appointment-details">
+                                <p><strong>Date:</strong> ${appointment.date}</p>
+                                <p><strong>Time:</strong> ${appointment.slot}</p>
+                                <p><strong>Status:</strong> ${appointment.status}</p>
+                                ${appointment.cancellation_reason ?
+                            `<div class="cancellation-reason">
+                                        <strong>Cancellation Reason:</strong> ${appointment.cancellation_reason}
+                                    </div>` : ''
+                        }
+                            </div>
+                            ${appointment.status === 'pending' ? `
+                                <div class="actions">
+                                    <button class="accept-btn" onclick="updateAppointmentStatus(${appointment.id}, 'accepted')">
+                                        Accept
+                                    </button>
+                                    <button class="reject-btn" onclick="updateAppointmentStatus(${appointment.id}, 'rejected')">
+                                        Reject
+                                    </button>
+                                </div>
+                            ` : ''}
+                            <button onclick="viewPatientInfo('${appointment.patient}')" class="info-btn">
+                                View Patient Info
+                            </button>
+                        </div>
+                    `).join('');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to load appointments');
+                });
+        }
+
+        function viewPatientInfo(username) {
+            fetch(`/api/doctor/patient-info/${username}`)
+                .then(res => res.json())
+                .then(data => {
+                    // Clear previous content first
+                    document.getElementById('basicInfoContent').innerHTML = '';
+                    document.getElementById('wellnessReport').innerHTML = '';
+                    document.getElementById('closeEndedResponses').innerHTML = '';
+                    document.getElementById('openEndedResponses').innerHTML = '';
+        
+                    // Display basic info
+                    const basicInfo = `
+                        <h4>Personal Details</h4>
+                        <p><strong>Name:</strong> ${username}</p>
+                        <p><strong>Age:</strong> ${data.basic_info.age || 'Not provided'}</p>
+                        <p><strong>Gender:</strong> ${data.basic_info.gender || 'Not provided'}</p>
+                        <p><strong>Occupation:</strong> ${data.basic_info.occupation || 'Not provided'}</p>
+                    `;
+                    document.getElementById('basicInfoContent').innerHTML = basicInfo;
+        
+                    // Display wellness report only if it exists
+                    if (data.basic_info.wellness_report) {
+                        document.getElementById('wellnessReport').innerHTML = `
+                            <h4>Wellness Report</h4>
+                            <div style="max-height: 200px; overflow-y: auto; padding: 10px; background: #f8f9fa; border-radius: 4px;">
+                                <p>${data.basic_info.wellness_report}</p>
+                            </div>`;
+                    }
+        
+                    // Display questionnaire responses if they exist
+                    if (data.questionnaire_responses) {
+                        const closeEnded = data.questionnaire_responses.close_ended;
+                        const openEnded = data.questionnaire_responses.open_ended;
+        
+                        if (closeEnded.length > 0) {
+                            document.getElementById('closeEndedResponses').innerHTML = formatResponses(closeEnded);
+                        }
+                        if (openEnded.length > 0) {
+                            document.getElementById('openEndedResponses').innerHTML = formatResponses(openEnded);
+                        }
+                    }
+        
+                    // Show the container
+                    document.querySelector('.patient-info-container').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error fetching patient info:', error);
+                    alert('Failed to load patient information');
+                });
+        }
+        
+        
+       
+
+        function formatResponses(responses) {
+            return responses.map(r =>
+                `<div class="response">
+                <p><strong>Q:</strong> ${r.Question}</p>
+                <p><strong>A:</strong> ${r.Answer || r.Response}</p>
+              </div>`
+            ).join('');
+        }
+
+
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+
+        function showPatientInfoModal(info) {
+            const modal = document.createElement('div');
+            modal.className = 'patient-info-modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h2>Patient Information</h2>
+                    <div class="basic-info">
+                        <h3>Basic Information</h3>
+                        <p>Name: ${info.basic_info.name}</p>
+                        <p>Age: ${info.basic_info.age}</p>
+                        <p>Gender: ${info.basic_info.gender}</p>
+                    </div>
+                    <div class="appointment-history">
+                        <h3>Appointment History</h3>
+                        ${generateAppointmentHistoryHTML(info.appointment_history)}
+                    </div>
+                    <div class="mood-history">
+                        <h3>Mood History</h3>
+                        ${generateMoodHistoryHTML(info.mood_history)}
+                    </div>
+                    <button onclick="closeModal(this)">Close</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+
+
+        // Initial load
+        loadAppointments();
+
+        // Refresh every 30 seconds
+        setInterval(loadAppointments, 30000);
+    </script>
+</body>
+
+</html>

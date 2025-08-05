@@ -1,0 +1,70 @@
+{
+    "ratings": [
+        {
+            "n": 1,
+            "user_name": "Vinayak Shinde",
+            "Wellness-rating": 9,
+            "timestamp": "2025-02-18T20:59:55.088905"
+        },
+        {
+            "n": 2,
+            "user_name": "Vinayak Shinde",
+            "Wellness-rating": 1,
+            "timestamp": "2025-02-18T21:00:10.914396"
+        },
+        {
+            "n": 3,
+            "user_name": "Vinayak Shinde",
+            "Wellness-rating": 10,
+            "timestamp": "2025-02-18T21:00:18.155718"
+        },
+        {
+            "n": 4,
+            "user_name": "Vinayak Shinde",
+            "Wellness-rating": 10,
+            "timestamp": "2025-02-26T20:38:39.424730"
+        },
+        {
+            "n": 1,
+            "user_name": "Vinayak123",
+            "Wellness-rating": 1,
+            "timestamp": "2025-03-01T08:14:05.263240"
+        },
+        {
+            "n": 2,
+            "user_name": "Vinayak123",
+            "Wellness-rating": 9,
+            "timestamp": "2025-03-01T08:14:44.542907"
+        },
+        {
+            "n": 1,
+            "user_name": "Vinayak Raju Shinde",
+            "Wellness-rating": 10,
+            "timestamp": "2025-03-02T12:28:16.089838"
+        },
+        {
+            "n": 2,
+            "user_name": "Vinayak Raju Shinde",
+            "Wellness-rating": 8,
+            "timestamp": "2025-03-02T12:28:22.409115"
+        },
+        {
+            "n": 3,
+            "user_name": "Vinayak Raju Shinde",
+            "Wellness-rating": 10,
+            "timestamp": "2025-03-02T12:28:25.240758"
+        },
+        {
+            "n": 1,
+            "user_name": "Vinayak",
+            "Wellness-rating": 7,
+            "timestamp": "2025-03-27T12:22:16.006457"
+        },
+        {
+            "n": 1,
+            "user_name": "Vinayak_Shinde",
+            "Wellness-rating": 10,
+            "timestamp": "2025-04-21T10:20:47.750367"
+        }
+    ]
+}

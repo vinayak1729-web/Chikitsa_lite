@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chikitsa Chat Interface</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Navbar.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+    <style>
+:root {
+    --primary-blue: #e0f7ff;
+    --primary-pink: #ffe0f7;
+    --accent-blue: #7fb9e6;
+    --text-color: #2c3e50;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --message-bg: rgba(255, 255, 255, 0.9);
+}
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --accent-color: #e74c3c;
+    --text-dark: #2c3e50;
+    --text-light: #7f8c8d;
+    --gradient-primary: linear-gradient(135deg, #a8e0ff 0%, #ffd1dc 100%);
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Navbar Styles */
+.navbar {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: var(--shadow-soft);
+    padding: 15px 0;
+    transition: all 0.3s ease;
+}
+
+.navbar-brand img.logo {
+    height: 40px;
+}
+
+.navbar-nav {
+    gap: 10px;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-link {
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    background: var(--gradient-primary);
+    color: var(--text-dark);
+    transform: translateY(-2px);
+}
+
+.nav-link i {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+.user-section {
+    gap: 15px;
+}
+
+.welcome-text {
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.btn-login,
+.btn-logout {
+    padding: 8px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.btn-login {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-logout {
+    background: var(--accent-color);
+    color: white;
+}
+
+.btn-login:hover,
+.btn-logout:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991px) {
+    .navbar-nav {
+        padding: 20px 0;
+    }
+
+    .nav-link {
+        padding: 10px 15px;
+    }
+
+    .user-section {
+        margin-top: 15px;
+        justify-content: center;
+    }
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-pink));
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    height: 90vh;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 24px;
+    box-shadow: 0 12px 36px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+}
+
+.chat-header {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo-orb {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-pink), var(--accent-blue));
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.logo h1 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 1.5rem;
+}
+
+.chat-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.welcome-message {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--message-bg);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    max-width: 80%;
+}
+
+.welcome-orb {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-pink), var(--accent-blue));
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.message {
+    padding: 1rem;
+    border-radius: 16px;
+    max-width: 80%;
+    animation: messageAppear 0.3s ease-out;
+}
+
+.user-message {
+    background: var(--accent-blue);
+    color: white;
+    align-self: flex-end;
+    margin-left: 20%;
+}
+
+.bot-message {
+    background: var(--message-bg);
+    color: var(--text-color);
+    align-self: flex-start;
+    margin-right: 20%;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.input-container {
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+input {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.05);
+    font-size: 1rem;
+    transition: background 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.send-button {
+    background: var(--accent-blue);
+    border: none;
+    border-radius: 12px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.send-button:hover {
+    transform: scale(1.05);
+}
+
+.send-button svg {
+    fill: white;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+@keyframes messageAppear {
+    from { 
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* Add these styles to your existing CSS */
+
+.loading-animation {
+    display: flex;
+    gap: 8px;
+    padding: 1rem;
+    align-items: center;
+    background: var(--message-bg);
+    border-radius: 16px;
+    max-width: 80px;
+    margin: 10px 0;
+}
+
+.loading-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent-blue);
+    border-radius: 50%;
+    animation: loadingDot 1.4s infinite ease-in-out;
+}
+
+.loading-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loading-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes loadingDot {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1); }
+}
+
+
+
+    </style>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="static/chikitsa.png" alt="CHIKITSA Logo" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('chat') }}">
+                            <i class="fas fa-comments"></i>
+                            <span>Consultation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('talk_to_me') }}">
+                            <i class="fas fa-microphone"></i>
+                            <span>Voice Support</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('image_analysis') }}">
+                            <i class="fas fa-image"></i>
+                            <span>Image analysis</span>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('personal_info') }}">
+                            <i class="fas fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <div class="d-flex align-items-center user-section">
+                    {% if session.username %}
+                    <span class="welcome-text">Welcome, {{ session.username }}</span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-logout">Sign Out</a>
+                    {% else %}
+                    <a class="btn btn-login" href="{{ url_for('login') }}">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </a>
+                    {% endif %}
+                    
+                </div>
+            </div>
+        </div>
+    </nav><br><br>
+    <div class="container"><br><br><br>
+        <div class="chat-header">
+            <div class="logo">
+                <div class="logo-orb"></div>
+                <h1>Chikitsa</h1>
+            </div>
+            <div class="settings-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="chat-container" id="chatContainer">
+            <div class="welcome-message">
+                <div class="welcome-orb"></div>
+                <p>Hello! I'm Chikitsa. How can I assist you today?</p>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Type your message...">
+            <button class="send-button" id="sendButton">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const chatContainer = document.getElementById('chatContainer');
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+
+    function addMessage(message, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+        messageDiv.textContent = message;
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    async function sendMessage() {
+    const message = userInput.value.trim();
+    if (!message) return;
+
+    addMessage(message, true);
+    userInput.value = '';
+    const loadingIndicator = showLoading();
+
+    try {
+        const response = await fetch('/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ message: message })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        loadingIndicator.remove();
+        addMessage(data.response);
+    } catch (error) {
+        loadingIndicator.remove();
+        console.error('Error:', error);
+        addMessage('Message failed to send. Please try again.');
+    }
+}
+
+
+    sendButton.addEventListener('click', sendMessage);
+
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    // Add loading animation
+    function showTypingIndicator() {
+        const indicator = document.createElement('div');
+        indicator.className = 'message bot-message typing-indicator';
+        indicator.innerHTML = '<span></span><span></span><span></span>';
+        chatContainer.appendChild(indicator);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        return indicator;
+    }
+
+    function removeTypingIndicator(indicator) {
+        indicator.remove();
+    }
+
+    // Example of how to use the typing indicator
+    async function handleResponse() {
+        const indicator = showTypingIndicator();
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        removeTypingIndicator(indicator);
+    }
+});
+function showLoading() {
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'loading-animation';
+    loadingDiv.innerHTML = `
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+    `;
+    chatContainer.appendChild(loadingDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+    return loadingDiv;
+}
+
+    </script>
+</body>
+</html>

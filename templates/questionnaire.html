@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Questionnaire | Chikitsa</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        * {
+            font-family: 'Bungee', cursive;
+        }
+
+        body {
+            background: linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%);
+            height: 100vh;
+            margin: 0;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            overflow: hidden;
+        }
+
+        .question-counter {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            z-index: 100;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .navbar {
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            height: 60px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .question-container {
+            position: relative;
+            width: 100%;
+            padding: 20px;
+            transform: translateX(-100%);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin: 10px 0;
+        }
+
+        .question-container.active {
+            transform: translateX(0);
+            opacity: 1;
+            display: block;
+            animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .question-container.exit {
+            animation: slideOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .custom-input {
+            font-size: 1rem;
+            padding: 15px;
+            border-radius: 15px;
+            background: #ffffff;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+            border: 2px solid #e0e0e0;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .custom-select {
+            font-size: 1rem;
+            padding: 15px;
+            border-radius: 15px;
+            background: #ffffff;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+            border: 2px solid #e0e0e0;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+            color: #2c3e50;
+        }
+
+        .custom-select:hover {
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .custom-select:focus {
+            outline: none;
+            border-color: #00C9FF;
+            box-shadow: 0 0 0 3px rgba(0,201,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #00C9FF, #92FE9D);
+            border: none;
+            color: white;
+            font-weight: bold;
+            letter-spacing: 1px;
+            padding: 12px 25px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,201,255,0.3);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,201,255,0.4);
+        }
+
+        .next-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        h3 {
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        footer {
+            background: #ffffff;
+            padding: 10px;
+            text-align: center;
+            height: 60px;
+        }
+
+        input[type="number"] {
+            font-size: 1.2rem;
+            padding: 15px;
+            border-radius: 15px;
+            border: none;
+            background: linear-gradient(145deg, #ffffff, #f5f5f5);
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            box-shadow: 5px 5px 20px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+
+        .custom-select {
+            /* Keep existing styles and add/modify these */
+            font-size: 1.2rem;
+            padding: 15px 45px 15px 15px; /* Increased right padding for arrow */
+            text-align: left;
+            color: #2c3e50;
+            background-color: white;
+            min-height: 55px;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Add this new style for selected options */
+        .custom-select option:checked {
+            background-color: #00C9FF;
+            color: white;
+        }
+        
+        /* Add this for the placeholder style */
+        .custom-select option[value=""][disabled] {
+            color: #999;
+        }
+
+        
+        @keyframes slideIn {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            0% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="static/chikitsa.png" alt="CHIKITSA Logo" style="height: 40px;">
+            </a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="question-counter">
+            Question <span class="current">1</span>/<span class="total">3</span>
+        </div>
+        <div class="card">
+            <form id="questionnaireForm" action="/questionnaire" method="POST">
+                <div class="question-container active" data-step="1">
+                    <h3>📅 Your Age</h3>
+                    <input type="number" class="form-control" name="age" required min="1" max="120">
+                    <button type="button" class="next-btn">Next</button>
+                </div>
+
+                <div class="question-container" data-step="2">
+                    <h3>👤 Your Gender</h3>
+                    <select class="custom-select" name="gender" required>
+                    <option value="" selected disabled>Choose your gender</option>
+                    <option value="Male">👤 Male</option>
+                    <option value="Female">👤 Female</option>
+                    <option value="Other">👤 Other</option>
+                    </select>
+                    <button type="button" class="next-btn">Next</button>
+                </div>
+
+                <div class="question-container" data-step="3">
+                    <h3>💼 What do you currently do?</h3>
+                    <div id="occupationContainer">
+                        <select class="custom-select" name="occupation_type" id="occupationSelect" required>
+                            <option value="" selected disabled>Select your occupation</option>
+                            <option value="Student">🎓 Student</option>
+                            <option value="Employed">💼 Employed</option>
+                            <option value="Self-employed">🚀 Self-employed</option>
+                            <option value="Unemployed">🏠 Not working</option>
+                            <option value="Other">🔄 Other</option>
+                        </select>
+                        <input type="text" 
+                               name="occupation_detail"
+                               id="otherOccupation" 
+                               class="custom-input" 
+                               style="display: none;" 
+                               placeholder="Please specify your occupation">
+                        <button type="submit" class="next-btn">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <span>Made with 💫 by Team Surya Prabha</span>
+    </footer>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 3;
+        
+        // Update counter initially
+        updateCounter();
+        
+        // Handle Enter key for all inputs
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (this.value) {
+                        const currentButton = document.querySelector(`[data-step="${currentStep}"] .next-btn`);
+                        if (currentButton) {
+                            currentButton.click();
+                        }
+                    }
+                }
+            });
+        });
+        
+        // Handle next button clicks
+        document.querySelectorAll('.next-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const currentContainer = document.querySelector(`[data-step="${currentStep}"]`);
+                const inputs = currentContainer.querySelectorAll('input:not([style*="display: none"]), select:not([style*="display: none"]');
+                
+                // Validate current inputs
+                let isValid = true;
+                inputs.forEach(input => {
+                    if (input.required && !input.value) {
+                        isValid = false;
+                    }
+                });
+                
+                if (isValid) {
+                    if (currentStep < totalSteps) {
+                        currentStep++;
+                        updateUI();
+                    } else if (currentStep === totalSteps) {
+                        // For the last step, make sure the occupation is properly set
+                        const occupationSelect = document.getElementById('occupationSelect');
+                        const otherInput = document.getElementById('otherOccupation');
+                        
+                        if (occupationSelect.value === 'other' && otherInput.value) {
+                            // If "other" is selected, use the text input value
+                            document.getElementById('questionnaireForm').submit();
+                        } else if (occupationSelect.value && occupationSelect.value !== 'other') {
+                            // If a regular option is selected
+                            document.getElementById('questionnaireForm').submit();
+                        }
+                    }
+                }
+            });
+        });
+        
+        // Handle occupation select
+        document.getElementById('occupationSelect').addEventListener('change', function() {
+            const otherInput = document.getElementById('otherOccupation');
+            if (this.value === 'other') {
+                otherInput.style.display = 'block';
+                otherInput.required = true;
+                this.required = false;
+            } else {
+                otherInput.style.display = 'none';
+                otherInput.required = false;
+                this.required = true;
+            }
+        });
+        
+        function updateCounter() {
+            document.querySelector('.question-counter .current').textContent = currentStep;
+            document.querySelector('.question-counter .total').textContent = totalSteps;
+        }
+        
+        function updateUI() {
+            updateCounter();
+            
+            const currentQuestion = document.querySelector('.question-container.active');
+            const nextQuestion = document.querySelector(`[data-step="${currentStep}"]`);
+            
+            if (currentQuestion) {
+                currentQuestion.classList.add('exit');
+                currentQuestion.addEventListener('animationend', function handler() {
+                    currentQuestion.classList.remove('active', 'exit');
+                    nextQuestion.classList.add('active');
+                    currentQuestion.removeEventListener('animationend', handler);
+                });
+            } else {
+                nextQuestion.classList.add('active');
+            }
+        }
+        
+
+
+        // Add this to your existing script section
+        // Replace the existing select event listeners with this enhanced version
+document.querySelectorAll('.custom-select').forEach(select => {
+    // Initial state setup
+    if (select.value === '') {
+        select.style.color = '#999';
+    }
+
+    select.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        
+        // Update select styling when an option is chosen
+        if (this.value) {
+            this.style.color = '#2c3e50';
+            this.style.fontWeight = 'bold';
+        } else {
+            this.style.color = '#999';
+            this.style.fontWeight = 'normal';
+        }
+
+        // Handle occupation specific logic
+        if (this.id === 'occupationSelect') {
+            const otherInput = document.getElementById('otherOccupation');
+            
+            if (this.value === 'Other') {
+                otherInput.style.display = 'block';
+                otherInput.required = true;
+                this.required = false;
+            } else {
+                otherInput.style.display = 'none';
+                otherInput.required = false;
+                otherInput.value = '';
+                this.required = true;
+            }
+        }
+
+        // Add visual feedback for selection
+        this.style.borderColor = '#00C9FF';
+        setTimeout(() => {
+            this.style.borderColor = '#e0e0e0';
+        }, 300);
+    });
+
+    // Add focus effects
+    select.addEventListener('focus', function() {
+        this.style.borderColor = '#00C9FF';
+    });
+
+    select.addEventListener('blur', function() {
+        this.style.borderColor = '#e0e0e0';
+    });
+});
+
+    </script>
+</body>
+</html>

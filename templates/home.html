@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chikitsa - Mental Health Companion</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<style>
+    /* Core Styles */
+    :root {
+        --primary-color: #3498db;
+        --secondary-color: #2ecc71;
+        --accent-color: #e74c3c;
+        --text-dark: #2c3e50;
+        --text-light: #7f8c8d;
+        --gradient-primary: linear-gradient(135deg, #a8e0ff 0%, #ffd1dc 100%);
+        --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Hero Section */
+    .hero-section {
+        padding: 120px 0;
+        background: var(--gradient-primary);
+        border-radius: 0 0 50px 50px;
+    }
+
+    .hero-section h1 {
+        font-size: 3.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: var(--text-dark);
+    }
+
+    .hero-image {
+        max-width: 100%;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    /* Quick Tools Section */
+    .quick-tools {
+        margin-top: -50px;
+    }
+
+    .quick-card {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: var(--shadow-soft);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .quick-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .quick-card i {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 15px;
+    }
+
+    /* Stats Section */
+    .stats-section {
+        padding: 80px 0;
+        background: #f8f9fa;
+    }
+
+    .stat-card {
+        padding: 30px;
+    }
+
+    .counter {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    /* Services Section */
+    .services-section {
+        padding: 80px 0;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 50px;
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+
+    /* Resource Cards */
+    .resource-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: var(--shadow-soft);
+        transition: transform 0.3s ease;
+    }
+
+    .resource-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .resource-image img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .resource-content {
+        padding: 20px;
+    }
+
+    /* Dashboard Preview */
+    .dashboard-preview {
+        background: #f8f9fa;
+        padding: 80px 0;
+    }
+
+    .dashboard-demo {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: var(--shadow-soft);
+    }
+
+    /* Trust Section */
+    .trust-section {
+        padding: 80px 0;
+    }
+
+    .trust-badges {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    /* Community Section */
+    .community-section {
+        background: var(--gradient-primary);
+        padding: 80px 0;
+        border-radius: 50px 50px 0 0;
+    }
+
+    .community-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+    }
+
+    /* Animations */
+    @keyframes float {
+        0% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-20px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+    }
+
+    /* Buttons */
+    .btn-primary {
+        background: var(--primary-color);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero-section h1 {
+            font-size: 2.5rem;
+        }
+
+        .quick-card {
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            margin-bottom: 30px;
+        }
+    }
+
+    /* Footer */
+    .footer {
+        background: #2c3e50;
+        color: white;
+        padding: 50px 0;
+    }
+
+    /* Utility Classes */
+    .text-gradient {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .achievement-card {
+        background: var(--gradient-primary);
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+    }
+
+    .features-list {
+        margin-top: 20px;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .feature-item i {
+        color: var(--primary-color);
+        margin-right: 10px;
+    }
+
+    .testimonial-card {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: var(--shadow-soft);
+        margin-top: 20px;
+    }
+
+    .testimonial-author {
+        margin-top: 15px;
+        text-align: right;
+    }
+
+    footer {
+        background: white;
+        padding: 1rem 0;
+        margin-top: 2rem;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .footer-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: var(--shadow-soft);
+        padding: 15px 0;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-brand img.logo {
+        height: 40px;
+    }
+
+    .navbar-nav {
+        gap: 10px;
+    }
+
+    .nav-item {
+        position: relative;
+    }
+
+    .nav-link {
+        color: var(--text-dark);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 15px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+        background: var(--gradient-primary);
+        color: var(--text-dark);
+        transform: translateY(-2px);
+    }
+
+    .nav-link i {
+        font-size: 1.1rem;
+        color: var(--primary-color);
+    }
+
+    .user-section {
+        gap: 15px;
+    }
+
+    .welcome-text {
+        color: var(--text-dark);
+        font-weight: 500;
+    }
+
+    .btn-login,
+    .btn-logout {
+        padding: 8px 20px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-login {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .btn-logout {
+        background: var(--accent-color);
+        color: white;
+    }
+
+    .btn-login:hover,
+    .btn-logout:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-soft);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 991px) {
+        .navbar-nav {
+            padding: 20px 0;
+        }
+
+        .nav-link {
+            padding: 10px 15px;
+        }
+
+        .user-section {
+            margin-top: 15px;
+            justify-content: center;
+        }
+    }
+
+
+    .footer-content img {
+        height: 30px;
+        border-radius: 50%;
+    }
+
+    /* Services Section Styling */
+    .services-section {
+        background: linear-gradient(135deg, #f6f9fc 0%, #f1f4f9 100%);
+        padding: 80px 0;
+    }
+
+    .resource-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        height: 100%;
+        border: 1px solid rgba(52, 152, 219, 0.1);
+    }
+
+    .resource-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(52, 152, 219, 0.15);
+    }
+
+    .resource-content {
+        padding: 25px;
+        text-align: center;
+    }
+
+    .resource-content i {
+        background: linear-gradient(135deg, #a8e0ff 0%, #94c8ff 100%);
+        -webkit-background-clip: text;
+        color: transparent;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+    }
+
+    /* Trust Section Styling */
+    .trust-section {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        padding: 80px 0;
+        position: relative;
+    }
+
+    .trust-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #3498db, #2ecc71, #e74c3c);
+    }
+
+    .achievement-card {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
+    }
+
+    .achievement-card h3 {
+        color: #fff;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .feature-item {
+        background: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+    }
+
+    .feature-item:hover {
+        transform: translateX(5px);
+    }
+
+    .feature-item i {
+        color: #2ecc71;
+        margin-right: 10px;
+    }
+
+    .testimonial-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(52, 152, 219, 0.1);
+    }
+
+    .testimonial-author {
+        color: #3498db;
+        margin-top: 20px;
+        text-align: right;
+    }
+
+    /* Button Styling */
+    .btn-primary {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        border: none;
+        padding: 10px 25px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    }
+</style>
+
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="static/chikitsa.png" alt="CHIKITSA Logo" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('chat') }}">
+                            <i class="fas fa-comments"></i>
+                            <span>Consultation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('talk_to_me') }}">
+                            <i class="fas fa-microphone"></i>
+                            <span>Voice Support</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('image_analysis') }}">
+                            <i class="fas fa-image"></i>
+                            <span>Image analysis</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/closed_ended">
+                            <i class="fas fa-star"></i>
+                            <span>Wellness Path</span>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('personal_info') }}">
+                            <i class="fas fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center user-section">
+                    {% if session.username %}
+                    <span class="welcome-text">Welcome, {{ session.username }}</span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-logout">Sign Out</a>
+                    {% else %}
+                    <a class="btn btn-login" href="{{ url_for('login') }}">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1>Your Journey to Mental Wellness Starts Here</h1>
+                    <p class="lead">Professional support, personalized guidance, and a community that cares.</p>
+                    <a href="/closed_ended" class="btn btn-primary btn-lg">Begin Your Journey</a>
+                </div>
+                <div class="col-lg-6">
+                    <img src="static/Wellness.png" alt="Wellness Illustration" class="hero-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Quick Access Tools -->
+    <section class="quick-tools">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="quick-card">
+                        <i class="fas fa-smile"></i>
+                        <h3>Daily Check-in</h3>
+                        <a href="{{ url_for('mood_tracker') }}" class="btn btn-outline-primary">Check Mood</a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="quick-card">
+                        <i class="fas fa-spa"></i>
+                        <h3>Meditation</h3>
+                        <a href="/meditation" class="btn btn-outline-primary">Start Now</a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="quick-card emergency">
+                        <i class="fas fa-star"></i>
+                        <h3>Wellness Journey</h3>
+                        <a href="/closed_ended" class="btn btn-outline-primary">Lets Dive into it</a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="quick-card">
+                        <i class="fas fa-calendar"></i>
+                        <h3>Schedule Session</h3>
+                        <a href="{{ url_for('appointment') }}" class="btn btn-outline-primary">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Featured Services -->
+    <section class="services-section">
+        <div class="container">
+            <h2 class="section-title">Our Services</h2>
+            <div class="row g-4">
+                <div class="col-md-4 mb-4">
+                    <div class="resource-card">
+                        <div class="resource-content">
+                            <i class="fas fa-brain fa-2x mb-3" style="color: var(--primary-color)"></i>
+                            <h3>AI Chat Support 🤖</h3>
+                            <p>Engage in supportive conversations with our empathetic AI assistant.</p>
+                            <a href="{{ url_for('chat') }}" class="btn btn-primary">Start Chat</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="resource-card">
+                        <div class="resource-content">
+                            <i class="fas fa-microphone-alt fa-2x mb-3" style="color: var(--primary-color)"></i>
+                            <h3>Voice Interaction 🎤</h3>
+                            <p>Natural voice conversations with emotion recognition technology.</p>
+                            <a href="{{ url_for('talk_to_me') }}" class="btn btn-primary">Start Voice Chat</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="resource-card">
+                        <div class="resource-content">
+                            <i class="fas fa-chart-line fa-2x mb-3" style="color: var(--primary-color)"></i>
+                            <h3>Mood Tracking 📊</h3>
+                            <p>Monitor and understand your emotional patterns over time.</p>
+                            <a href="{{ url_for('mood_tracker') }}" class="btn btn-primary">Track Mood</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="resource-card">
+                        <div class="resource-content">
+                            <i class="fas fa-meditation fa-2x mb-3" style="color: var(--primary-color)"></i>
+                            <h3>Guided Meditation 🧘</h3>
+                            <p>Find peace with our guided breathing and meditation exercises.</p>
+                            <a href="/meditation" class="btn btn-primary">Start Meditation</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="resource-card">
+                        <div class="resource-content">
+                            <i class="fas fa-notes-medical fa-2x mb-3" style="color: var(--primary-color)"></i>
+                            <h3>Health Analysis 🏥</h3>
+                            <p>Comprehensive mental health assessments and personalized insights.</p>
+                            <a href="/closed_ended" class="btn btn-primary">Start Assessment</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="resource-card">
+                        <div class="resource-content">
+                            <i class="fas fa-shield-alt fa-2x mb-3" style="color: var(--primary-color)"></i>
+                            <h3>Privacy First 🔒</h3>
+                            <p>Your mental health data is encrypted and completely confidential.</p>
+                            <a href="{{ url_for('personal_info') }}" class="btn btn-primary">View Privacy Policy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Indicators -->
+    <section class="trust-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2>Why Choose Chikitsa?</h2>
+                    <div class="achievement-card mb-4">
+                        <h3>🏆 Gen AI Exchange Hackathon Winners</h3>
+                        <p>3rd Prize Winners among 38,000+ participants</p>
+                    </div>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Advanced Emotion Detection in Voice Chat</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Hallucination-Free AI Responses</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Live One-on-One Doctor Interactions</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Comprehensive Mental Wellness Solution</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="testimonial-slider">
+                        <div class="testimonial-card">
+                            <p>"Chikitsa represents the future of mental health support. Created by innovative
+                                developers Vinayak Shinde and Vishal Mishra, this platform tackles billion-dollar
+                                problem statements with cutting-edge technology."</p>
+                            <div class="testimonial-author">
+                                <strong>- Mental Health Professional</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Statistics Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <h2 class="counter">50+</h2>
+                        <p>Active Users </p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <h2 class="counter">98%</h2>
+                        <p>Satisfaction Rate</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <h2 class="counter">Comming Soon</h2>
+                        <p>Expert Therapists</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <h2 class="counter">24/7</h2>
+                        <p>Support Available</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <img src="{{ url_for('static', filename='suryaprabha.jpeg') }}" alt="Team Logo">
+                <span>Developed by Team Surya Prabha </span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

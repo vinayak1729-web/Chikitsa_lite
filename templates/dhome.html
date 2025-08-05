@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home - SMART on FHIR App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Welcome to the SMART on FHIR App</h1>
+    <p>You are logged in successfully!</p>
+    <a href="{{ url_for('register') }}" class="button">Register a Patient</a>
+    <a href="{{ url_for('logout') }}" class="button">Logout</a>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create User</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Create New User</h1>
+        
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        
+        <form method="POST">
+            <div class="form-group">
+                <label>Name:</label>
+                <input type="text" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" name="password" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Role:</label>
+                <select name="role" required>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                    <option value="doctor">Doctor</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn">Create User</button>
+        </form>
+        
+        <a href="{{ url_for('admin_dashboard') }}" class="btn">Back to Dashboard</a>
+    </div>
+</body>
+</html>

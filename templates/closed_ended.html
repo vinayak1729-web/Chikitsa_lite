@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Close-ended Questionnaire</title>
+</head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #84e0ff 0%, #f59eff 100%);
+        color: #333;
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 20px;
+    }
+
+    h1 {
+        color: white;
+        margin-bottom: 10px;
+        font-size: 2.5em;
+        font-weight: 600;
+    }
+
+    .subtitle {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.1em;
+        margin-bottom: 20px;
+    }
+
+    .progress-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto 20px;
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 20px;
+        background-color: #edf2f7;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(90deg, #4481eb 0%, #04befe 100%);
+        transition: width 0.4s ease-in-out;
+    }
+
+    .progress-text {
+        text-align: center;
+        margin-top: 8px;
+        font-size: 14px;
+        color: #4a5568;
+    }
+
+    form {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 25px;
+    }
+
+    .question-container {
+        margin-bottom: 25px;
+        padding: 15px;
+        border-bottom: 1px solid #edf2f7;
+        transition: all 0.3s ease;
+    }
+
+    .question-label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 12px;
+        color: #0c071a;
+    }
+
+    .radio-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .radio-option {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 6px;
+        transition: background-color 0.2s;
+    }
+
+    .radio-option:hover {
+        background-color: #f0f4f8;
+    }
+
+    .radio-option input[type="radio"] {
+        margin-right: 8px;
+        cursor: pointer;
+    }
+
+    button {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(90deg, #4481eb 0%, #04befe 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(68, 129, 235, 0.2);
+    }
+
+    button:hover {
+        background: linear-gradient(90deg, #04befe 0%, #4481eb 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(68, 129, 235, 0.3);
+    }
+
+    footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        padding: 1rem;
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        z-index: 1000;
+    }
+
+    footer img {
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        margin-right: 15px;
+        object-fit: cover;
+        border: 2px solid var(--primary-color);
+    }
+
+    footer span {
+        font-size: 0.9rem;
+        color: var(--text-color-dark);
+        display: flex;
+        align-items: center;
+    }
+
+    @media (max-width: 768px) {
+        body {
+            padding: 15px;
+        }
+
+        .progress-container,
+        form {
+            padding: 15px;
+        }
+
+        .radio-group {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .radio-option {
+            width: 100%;
+        }
+
+        button {
+            padding: 12px;
+        }
+
+        footer {
+            padding: 10px 15px;
+        }
+    }
+
+
+    .prev-btn {
+        background: linear-gradient(90deg, #04befe 0%, #4481eb 100%);
+        flex: 1;
+    }
+
+    .next-btn {
+        background: linear-gradient(90deg, #4481eb 0%, #04befe 100%);
+        flex: 2;
+    }
+
+    .question-container {
+        display: none;
+        opacity: 0;
+        transform: translateX(-100%);
+        margin-bottom: 15px; /* Reduced from 25px */
+        padding: 15px 15px 5px 15px; /* Reduced bottom padding */
+        border-bottom: 1px solid #edf2f7;
+        transition: all 0.3s ease;
+    }
+
+    .question-container.active {
+        display: block;
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .question-container.exit {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    .navigation-buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 15px; /* Reduced from 20px */
+        margin-bottom: 10px; /* Added to reduce space at bottom */
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem 2rem 1rem 2rem; /* Reduced bottom padding */
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .main-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem;
+        position: relative;
+    }
+
+    
+
+</style>
+
+<body>
+    <div class="header">
+        <h1>📝 Close-ended Questionnaire</h1>
+        <p class="subtitle">✨ Please answer all questions honestly. Your responses will help us understand how to better
+            support you. 💙</p>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="progress-text" style="color: white;">
+            Progress: <span id="progress-percentage">0</span>% Complete 🌟
+        </div>
+    </div>
+
+    <!-- Modify the form section -->
+<div class="main-content">
+    <div class="card">
+        <form class="assessment-form" action="{{ url_for('submit_close_ended') }}" method="POST">
+            {% for question in questions %}
+            <div class="question-container" data-question="{{ loop.index }}">
+                <label class="question-label">❓ {{ question }}</label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="{{ question }}" value="Yes" required onchange="handleOptionSelect()">
+                        <span>✅ Yes</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="{{ question }}" value="No" required onchange="handleOptionSelect()">
+                        <span>❌ No</span>
+                    </label>
+                </div>
+                <div class="navigation-buttons">
+                    {% if not loop.first %}
+                    <button type="button" class="prev-btn" onclick="showPreviousQuestion()">⬅️ Previous</button>
+                    {% endif %}
+                    {% if loop.last %}
+                    <button type="submit" class="next-btn">Submit ✨</button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </form>
+    </div>
+</div>
+
+
+    <footer>
+        <img src="{{ url_for('static', filename='suryaprabha.jpeg') }}" alt="Logo">
+        <span>🌍 Made with ❤️ by Team Surya Prabha ☀️</span>
+    </footer>
+
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = document.querySelectorAll('.question-container').length;
+
+        // Show initial question
+        document.querySelector(`[data-question="1"]`).classList.add('active');
+
+        function handleOptionSelect() {
+            updateProgress();
+            
+            // Auto-progress to next question if not the last question
+            const currentContainer = document.querySelector('.question-container.active');
+            const currentQuestionNumber = parseInt(currentContainer.dataset.question);
+            
+            if (currentQuestionNumber < totalQuestions) {
+                setTimeout(() => {
+                    showQuestion(currentQuestionNumber + 1);
+                }, 500); // Half second delay before moving to next question
+            }
+        }
+
+        function showQuestion(number) {
+            const currentContainer = document.querySelector('.question-container.active');
+            const nextContainer = document.querySelector(`[data-question="${number}"]`);
+
+            if (currentContainer) {
+                currentContainer.classList.add('exit');
+                setTimeout(() => {
+                    currentContainer.classList.remove('active', 'exit');
+                    nextContainer.classList.add('active');
+                }, 300);
+            } else {
+                nextContainer.classList.add('active');
+            }
+
+            currentQuestion = number;
+            updateProgress();
+        }
+
+
+        function showPreviousQuestion() {
+            if (currentQuestion > 1) {
+                showQuestion(currentQuestion - 1);
+            }
+        }
+
+        function updateProgress() {
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progressPercentage = (answeredQuestions / totalQuestions) * 100;
+
+            document.getElementById('progress').style.width = progressPercentage + '%';
+            document.getElementById('progress-percentage').textContent = Math.round(progressPercentage);
+        }
+
+        updateProgress();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+[
+    {
+        "name": "Vinayak",
+        "email": "shindevinayak233@gmail.com",
+        "password": "$2b$12$i6ayTGVxGYZcM.8qkKSXy.qrTf.zPS4ZNx6Snvs0NtkHuAHRLMFFO",
+        "role": "admin",
+        "created_at": "2023-01-01T00:00:00"
+    },
+    {
+        "name": "Vishal",
+        "email": "vishal214.mishra@gmail.com",
+        "password": "$2b$12$T0UgjAyeGydahArxzHCek.AXoBj9ikV7ZVFqUx6eQ5DFC88SBf0wm",
+        "role": "doctor",
+        "created_at": "2025-02-11T15:58:09.893521",
+        "created_by": "vinayak@admin.com",
+        "updated_at": "2025-02-18T12:18:40.806736",
+        "updated_by": "vinayak@admin.com"
+    },
+    {
+        "name": "Vinayak_Shinde",
+        "email": "vs8879785320@gmail.com",
+        "password": "$2b$12$bIDCuL8R8k0AkN6YYMurIu/cT1JNZqUaDECkLPt0x0uF5knTosTeC",
+        "role": "user",
+        "created_at": "2025-04-01T21:24:41.794131"
+    },
+    {
+        "name": "vishal  mishra",
+        "email": "vishal@gmail.com",
+        "password": "$2b$12$mOJPsOHit815nFzDjZSjYucUg.s8/6wbQJQByGwVwqhZgxpd6t0yW",
+        "role": "user",
+        "created_at": "2025-08-05T12:18:30.190276"
+    }
+]

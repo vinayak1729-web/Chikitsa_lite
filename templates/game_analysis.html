@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tap-Impulse Test Analysis</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .title {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .insights-section {
+            background: #e8f5e8;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-left: 5px solid #28a745;
+        }
+        
+        .insights-title {
+            color: #155724;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .insight-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 3px solid #28a745;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        .session-history {
+            margin-top: 40px;
+        }
+        
+        .session-history h3 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .date-group {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .date-header {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .session-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .session-info {
+            flex: 1;
+        }
+        
+        .session-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        
+        .buttons {
+            text-align: center;
+            margin-top: 40px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #545b62;
+            transform: translateY(-2px);
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+            font-size: 1.2em;
+        }
+        
+        .no-data-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🧠 Tap-Impulse Test Analysis</h1>
+            <p class="subtitle">Cognitive Performance Report for {{ username }}</p>
+        </div>
+        
+        {% if analysis.message %}
+            <div class="no-data">
+                <div class="no-data-icon">📊</div>
+                <h3>{{ analysis.message }}</h3>
+                <p>Play the game to see your cognitive performance analysis!</p>
+                <a href="/game" class="btn btn-primary">Play Game</a>
+            </div>
+        {% else %}
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">{{ analysis.total_sessions }}</div>
+                    <div class="stat-label">Total Sessions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ analysis.accuracy }}%</div>
+                    <div class="stat-label">Overall Accuracy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ analysis.total_correct }}</div>
+                    <div class="stat-label">Correct Responses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ analysis.avg_correct_time }}ms</div>
+                    <div class="stat-label">Avg Response Time</div>
+                </div>
+            </div>
+            
+            {% if analysis.insights %}
+            <div class="insights-section">
+                <h3 class="insights-title">
+                    💡 Insights & Recommendations
+                </h3>
+                {% for insight in analysis.insights %}
+                <div class="insight-item">
+                    {{ insight }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% if analysis.game_data %}
+            <div class="session-history">
+                <h3>📅 Session History</h3>
+                {% for date, sessions in analysis.game_data.items() %}
+                <div class="date-group">
+                    <div class="date-header">{{ date }}</div>
+                    {% for session in sessions %}
+                    <div class="session-item">
+                        <div class="session-info">
+                            <strong>Session {{ loop.index }}</strong>
+                            {% if session.timestamp %}
+                            <div style="font-size: 0.9em; color: #6c757d;">
+                                {{ session.timestamp.split('T')[1].split('.')[0] if 'T' in session.timestamp else session.timestamp }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="session-stats">
+                            <span style="color: #28a745;">✓ {{ session.correct_responses or 0 }}</span>
+                            <span style="color: #dc3545;">✗ {{ session.incorrect_responses or 0 }}</span>
+                            {% if session.accuracy %}
+                            <span>{{ "%.1f"|format(session.accuracy) }}%</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endif %}
+        
+        <div class="buttons">
+            <a href="/game/download-report" class="btn btn-success">📄 Download PDF Report</a>
+            <a href="/game" class="btn btn-primary">🎮 Play Again Tomorrow</a>
+            <a href="/home" class="btn btn-secondary">🏠 Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meditation Space - Chikitsa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Core Styles */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --accent-color: #e74c3c;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --gradient-primary: linear-gradient(135deg, #a8e0ff 0%, #ffd1dc 100%);
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--shadow-soft);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand img.logo {
+            height: 40px;
+        }
+
+        .navbar-nav {
+            gap: 10px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--gradient-primary);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+
+        .user-section {
+            gap: 15px;
+        }
+
+        .welcome-text {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .btn-login,
+        .btn-logout {
+            padding: 8px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-logout {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-login:hover,
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-soft);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 991px) {
+            .navbar-nav {
+                padding: 20px 0;
+            }
+
+            .nav-link {
+                padding: 10px 15px;
+            }
+
+            .user-section {
+                margin-top: 15px;
+                justify-content: center;
+            }
+        }
+        body {
+            font-family: 'Lora', serif;
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .meditation-container {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .breathing-circle {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            margin: 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+            animation: breathe 8s infinite ease-in-out;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .instruction {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin: 2rem 0;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .timer {
+            font-size: 2rem;
+            color: #3498db;
+            margin: 1rem 0;
+        }
+
+        .start-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            background: #2980b9;
+        }
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        
+        .stop-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: none;
+        }
+        
+        .stats-container {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+        }
+        
+        #meditationChart {
+            max-width: 600px;
+            margin: 2rem auto;
+        } 
+        /* Add to existing styles */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        
+        .stop-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: none;
+        }
+        
+        .stats-container {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+        }
+        
+        #meditationChart {
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="static/chikitsa.png" alt="CHIKITSA Logo" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('chat') }}">
+                            <i class="fas fa-comments"></i>
+                            <span>Consultation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('talk_to_me') }}">
+                            <i class="fas fa-microphone"></i>
+                            <span>Voice Support</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('image_analysis') }}">
+                            <i class="fas fa-image"></i>
+                            <span>Image analysis</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">
+                            <i class="fas fa-home"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('personal_info') }}">
+                            <i class="fas fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center user-section">
+                    {% if session.username %}
+                    <span class="welcome-text">Welcome, {{ session.username }}</span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-logout">Sign Out</a>
+                    {% else %}
+                    <a class="btn btn-login" href="{{ url_for('login') }}">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+<br><br><br><br>
+    <div class="meditation-container"><br><br><br>
+        <h1 class="mb-4">Mindful Breathing</h1>
+        <div class="breathing-circle">
+            <div class="instruction" id="instruction">Breathe In</div>
+        </div>
+        <div class="timer" id="timer">5:00</div>
+        <div class="button-group">
+            <button class="start-btn" id="startBtn" onclick="startMeditation()">Begin Session</button>
+            <button class="stop-btn" id="stopBtn" onclick="stopMeditation()">Stop Session</button>
+        </div>
+        
+        <div class="stats-container">
+            <h3>Your Meditation Journey</h3>
+            <canvas id="meditationChart"></canvas>
+            <div id="meditationStats"></div>
+        </div>
+    </div>
+
+    <script>
+        let isBreathing = false;
+        let timer;
+        let startTime;
+        let meditationChart;
+
+        function startMeditation() {
+            if (isBreathing) return;
+            isBreathing = true;
+            startTime = new Date();
+            
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'inline-block';
+            
+            const instruction = document.getElementById('instruction');
+            instruction.style.opacity = 1;
+            
+            let timeLeft = 300;
+            const timerDisplay = document.getElementById('timer');
+            
+            function updateTimer() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            timer = setInterval(() => {
+                if (timeLeft <= 0) {
+                    completeMeditation();
+                    return;
+                }
+                
+                timeLeft--;
+                updateTimer();
+                instruction.textContent = Math.floor(timeLeft) % 8 < 4 ? "Breathe In" : "Breathe Out";
+            }, 1000);
+        }
+
+        function stopMeditation() {
+            completeMeditation(false);
+        }
+
+        function completeMeditation(completed = true) {
+            clearInterval(timer);
+            const duration = Math.floor((new Date() - startTime) / 1000);
+            
+            fetch('/log_meditation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    duration: duration,
+                    completed: completed
+                })
+            })
+            .then(response => response.json())
+            .then(() => {
+                updateMeditationStats();
+                resetUI();
+            });
+        }
+
+        function resetUI() {
+            isBreathing = false;
+            document.getElementById('instruction').style.opacity = 0;
+            document.getElementById('timer').textContent = '5:00';
+            document.getElementById('startBtn').style.display = 'inline-block';
+            document.getElementById('stopBtn').style.display = 'none';
+        }
+
+        function updateMeditationStats() {
+            fetch('/get_meditation_stats')
+            .then(response => response.json())
+            .then(data => {
+                const statsDiv = document.getElementById('meditationStats');
+                statsDiv.innerHTML = `
+                    <p>Total Sessions: ${data.total_sessions}</p>
+                    <p>Total Minutes: ${Math.floor(data.total_minutes / 60)}</p>
+                `;
+                
+                updateChart(data.recent_sessions);
+            });
+        }
+
+        function updateChart(sessions) {
+            const ctx = document.getElementById('meditationChart').getContext('2d');
+            
+            if (meditationChart) {
+                meditationChart.destroy();
+            }
+
+            meditationChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sessions.map(s => new Date(s.timestamp).toLocaleDateString()),
+                    datasets: [{
+                        label: 'Meditation Duration (minutes)',
+                        data: sessions.map(s => s.duration / 60),
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Minutes'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Load initial stats
+        updateMeditationStats();
+    </script>
+</body>
+</html>

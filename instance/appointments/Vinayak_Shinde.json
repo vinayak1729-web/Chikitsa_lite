@@ -1,0 +1,29 @@
+[
+    {
+        "id": 1,
+        "patient": "Vinayak_Shinde",
+        "date": "2025-04-03",
+        "slot": "12:00-13:00",
+        "status": "cancelled",
+        "created_at": "2025-04-03T13:35:13.565328",
+        "cancellation_reason": "not avialble"
+    },
+    {
+        "id": 2,
+        "patient": "Vinayak_Shinde",
+        "date": "2025-04-07",
+        "slot": "10:00-11:00",
+        "status": "cancelled",
+        "created_at": "2025-04-03T13:35:33.436957",
+        "cancellation_reason": "busy"
+    },
+    {
+        "id": 3,
+        "patient": "Vinayak_Shinde",
+        "date": "2025-04-07",
+        "slot": "12:00-13:00",
+        "status": "pending",
+        "created_at": "2025-04-04T10:27:29.181510",
+        "cancellation_reason": null
+    }
+]

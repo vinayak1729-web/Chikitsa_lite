@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tap-Impulse Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f3f4f6;
+        }
+        #video-feed {
+            border-radius: 50%;
+            overflow: hidden;
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+        }
+        #word-display {
+            transition: all 0.3s ease;
+        }
+        .button {
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div id="game-container" class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full text-center">
+        <h1 class="text-3xl font-bold mb-4">Tap-Impulse Test</h1>
+        <div id="instructions" class="text-gray-600 mb-6">
+            <p>Tap the word when its text color matches the word (e.g., "Red" in red). Don't tap if they mismatch. You have 15 seconds!</p>
+        </div>
+        <div id="word-display" class="text-5xl font-semibold p-4 border-2 border-gray-300 rounded-lg mb-6">Click Start to Begin</div>
+        <div id="timer" class="text-xl mb-4">Time: 15s</div>
+        <div id="score" class="text-xl mb-4">Score: 0</div>
+        <video id="video-feed" width="200" height="200" autoplay></video>
+        <div class="flex justify-center gap-4 mt-4">
+            <button id="start-recording-btn" class="button bg-blue-500 text-white px-4 py-2 rounded">Start Recording</button>
+            <button id="stop-recording-btn" class="button bg-red-500 text-white px-4 py-2 rounded" disabled>Stop Recording</button>
+        </div>
+        <div class="flex justify-center gap-4 mt-4">
+            <button id="start-btn" class="button bg-green-500 text-white px-6 py-3 rounded-lg">Start Game</button>
+            <button id="submit-btn" class="button bg-gray-500 text-white px-6 py-3 rounded-lg" disabled>Submit Results</button>
+        </div>
+    </div>
+
+    <script>
+        const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange'];
+        const words = ['Red', 'Blue', 'Green', 'Yellow', 'Purple', 'Orange'];
+        let gameActive = false;
+        let score = 0;
+        let timeLeft = 15;
+        let correctResponses = 0;
+        let incorrectResponses = 0;
+        let detailedResponses = [];
+        let startTime;
+        let timerInterval;
+        let wordInterval;
+        let videoFilename = null;
+
+        const wordDisplay = document.getElementById('word-display');
+        const timerDisplay = document.getElementById('timer');
+        const scoreDisplay = document.getElementById('score');
+        const startBtn = document.getElementById('start-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const startRecordingBtn = document.getElementById('start-recording-btn');
+        const stopRecordingBtn = document.getElementById('stop-recording-btn');
+        const videoFeed = document.getElementById('video-feed');
+
+        async function setupVideo() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                videoFeed.srcObject = stream;
+            } catch (err) {
+                console.error('Error accessing video:', err);
+                videoFeed.style.display = 'none';
+            }
+        }
+
+        startRecordingBtn.addEventListener('click', async () => {
+            const response = await fetch('/start_recording', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'duration=15'
+            });
+            const result = await response.json();
+            if (result.status === 'Recording started') {
+                videoFilename = result.video_filename;
+                startRecordingBtn.disabled = true;
+                stopRecordingBtn.disabled = false;
+            } else {
+                alert('Failed to start recording: ' + result.status);
+            }
+        });
+
+        stopRecordingBtn.addEventListener('click', async () => {
+            const response = await fetch('/stop_recording', { method: 'POST' });
+            const result = await response.json();
+            if (result.status === 'Recording stopped') {
+                startRecordingBtn.disabled = false;
+                stopRecordingBtn.disabled = true;
+            } else {
+                alert('Failed to stop recording: ' + result.status);
+            }
+        });
+
+        function getRandomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function displayWord() {
+            const word = getRandomItem(words);
+            const color = getRandomItem(colors);
+            const shouldMatch = Math.random() > 0.5;
+            const displayColor = shouldMatch ? word.toLowerCase() : getRandomItem(colors.filter(c => c !== word.toLowerCase()));
+            wordDisplay.textContent = word;
+            wordDisplay.style.color = displayColor;
+            return { word, color: displayColor, shouldMatch };
+        }
+
+        function startWordDisplay() {
+            let currentWord = displayWord();
+            wordInterval = setInterval(() => {
+                currentWord = displayWord();
+                // Randomize display duration between 0.5s and 1.5s for unpredictability
+                const nextChange = Math.random() * (1.5 - 0.5) + 0.5;
+                clearInterval(wordInterval);
+                wordInterval = setInterval(() => {
+                    currentWord = displayWord();
+                }, nextChange * 1000);
+            }, 1000);
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft -= 0.1;
+                timerDisplay.textContent = `Time: ${timeLeft.toFixed(1)}s`;
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 100);
+        }
+
+        function getInsights() {
+            const avgReactionTime = detailedResponses.reduce((sum, res) => sum + res.reaction_time, 0) / detailedResponses.length || 0;
+            let insight = '';
+            if (incorrectResponses > correctResponses) {
+                insight = "You responded too quickly to mismatches – consider practicing deep focus to improve self-regulation.";
+            } else if (avgReactionTime > 1000) {
+                insight = "Your reactions were slower, which might indicate fatigue or stress. Try taking breaks or mindfulness exercises.";
+            } else {
+                insight = "Great job! Your quick and accurate responses show strong attention control.";
+            }
+            return insight;
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            clearInterval(wordInterval);
+            gameActive = false;
+            wordDisplay.textContent = 'Game Over!';
+            startBtn.disabled = false;
+            submitBtn.disabled = false;
+            const insight = getInsights();
+            alert(`Game Over!\nScore: ${score}\nCorrect: ${correctResponses}\nIncorrect: ${incorrectResponses}\nInsight: ${insight}`);
+        }
+
+        startBtn.addEventListener('click', () => {
+            if (!gameActive) {
+                gameActive = true;
+                score = 0;
+                correctResponses = 0;
+                incorrectResponses = 0;
+                detailedResponses = [];
+                timeLeft = 15;
+                startTime = Date.now();
+                scoreDisplay.textContent = `Score: ${score}`;
+                timerDisplay.textContent = `Time: ${timeLeft.toFixed(1)}s`;
+                startBtn.disabled = true;
+                submitBtn.disabled = true;
+                setupVideo();
+                displayWord();
+                startWordDisplay();
+                startTimer();
+            }
+        });
+
+        wordDisplay.addEventListener('click', () => {
+            if (gameActive) {
+                const { word, color, shouldMatch } = displayWord();
+                const reactionTime = Date.now() - startTime;
+                const correct = shouldMatch && word.toLowerCase() === color;
+                if (correct) {
+                    score += 10;
+                    correctResponses += 1;
+                } else {
+                    score -= 5;
+                    incorrectResponses += 1;
+                }
+                detailedResponses.push({ word, color, correct, reaction_time: reactionTime });
+                scoreDisplay.textContent = `Score: ${score}`;
+                startTime = Date.now();
+            }
+        });
+
+        submitBtn.addEventListener('click', async () => {
+            const totalTime = 15 - timeLeft;
+            const results = {
+                correct_responses: correctResponses,
+                incorrect_responses: incorrectResponses,
+                total_time: totalTime,
+                detailed_responses: detailedResponses,
+                insight: getInsights()
+            };
+            try {
+                const response = await fetch('/game/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(results)
+                });
+                const result = await response.json();
+                alert(result.message);
+                if (result.success) {
+                    window.location.href = '/game/analysis';
+                }
+            } catch (err) {
+                alert('Error submitting results: ' + err.message);
+            }
+        });
+    </script>
+</body>
+</html>

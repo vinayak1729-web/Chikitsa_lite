@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+</head>
+<style>
+    /* Navbar Styles */
+    .navbar {
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: var(--shadow-soft);
+        padding: 15px 0;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-brand img.logo {
+        height: 40px;
+    }
+
+    .navbar-nav {
+        gap: 10px;
+    }
+
+    .nav-item {
+        position: relative;
+    }
+
+    .nav-link {
+        color: var(--text-dark);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 15px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+        background: var(--gradient-primary);
+        color: var(--text-dark);
+        transform: translateY(-2px);
+    }
+
+    .nav-link i {
+        font-size: 1.1rem;
+        color: var(--primary-color);
+    }
+
+    .user-section {
+        gap: 15px;
+    }
+
+    .welcome-text {
+        color: var(--text-dark);
+        font-weight: 500;
+    }
+
+    .btn-login,
+    .btn-logout {
+        padding: 8px 20px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-login {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .btn-logout {
+        background: var(--accent-color);
+        color: white;
+    }
+
+    .btn-login:hover,
+    .btn-logout:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-soft);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 991px) {
+        .navbar-nav {
+            padding: 20px 0;
+        }
+
+        .nav-link {
+            padding: 10px 15px;
+        }
+
+        .user-section {
+            margin-top: 15px;
+            justify-content: center;
+        }
+    }
+
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="static/chikitsa.png" alt="CHIKITSA Logo" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('chat') }}">
+                            <i class="fas fa-comments"></i>
+                            <span>Consultation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('talk_to_me') }}">
+                            <i class="fas fa-microphone"></i>
+                            <span>Voice Support</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('image_analysis') }}">
+                            <i class="fas fa-image"></i>
+                            <span>Image analysis</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/closed_ended">
+                            <i class="fas fa-star"></i>
+                            <span>Wellness Path</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('mood_tracker') }}">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Emotion Analytics</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/meditation">
+                            <i class="fas fa-spa"></i>
+                            <span>Meditate</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('personal_info') }}">
+                            <i class="fas fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center user-section">
+                    {% if session.username %}
+                    <span class="welcome-text">Welcome, {{ session.username }}</span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-logout">Sign Out</a>
+                    {% else %}
+                    <a class="btn btn-login" href="{{ url_for('login') }}">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        
+        <div class="dashboard-controls">
+            <a href="{{ url_for('create_user') }}" class="btn">Create New User</a>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search users..." onkeyup="searchUsers()">
+            </div>
+        </div>
+        
+        <h2>Existing Users</h2>
+        <table id="usersTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('update_role', user_email=user.email) }}" class="role-form">
+                            <select name="new_role">
+                                <option value="user" {% if user.role == 'user' %}selected{% endif %}>User</option>
+                                <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+                                <option value="doctor" {% if user.role == 'doctor' %}selected{% endif %}>Doctor</option>
+                            </select>
+                            <button type="submit" class="btn-save">Save</button>
+                        </form>
+                    </td>
+                    <td>{{ user.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function searchUsers() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.toLowerCase();
+    
+    // Search local users
+    searchTable('usersTable', filter);
+    // Search MeldRx users
+    searchTable('meldrxUsersTable', filter);
+}
+
+function searchTable(tableId, filter) {
+    const table = document.getElementById(tableId);
+    const rows = table.getElementsByTagName('tr');
+
+    for (let i = 1; i < rows.length; i++) {
+        const name = rows[i].getElementsByTagName('td')[0];
+        const email = rows[i].getElementsByTagName('td')[1];
+        if (name || email) {
+            const nameText = name.textContent || name.innerText;
+            const emailText = email.textContent || email.innerText;
+            if (nameText.toLowerCase().indexOf(filter) > -1 || 
+                emailText.toLowerCase().indexOf(filter) > -1) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+    }
+}
+
+        function saveRole(button) {
+            const email = button.getAttribute('data-email');
+            const row = button.closest('tr');
+            const newRole = row.querySelector('select').value;
+            
+            fetch('/admin/update_role/' + email, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    new_role: newRole
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Role updated successfully!');
+                    location.reload();
+                } else {
+                    alert('Failed to update role: ' + data.message);
+                }
+            });
+        }
+    </script>
+
+    <style>
+        .dashboard-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .search-box input {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 300px;
+            font-size: 14px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0,123,255,0.3);
+        }
+    </style>
+</body>
+</html>
