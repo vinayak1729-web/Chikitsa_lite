@@ -29,7 +29,8 @@
 *A concise 3-minute overview highlighting key features, technical implementation, multimodal AI capabilities, and real-world usage scenarios.*
 
 </div>
----
+
+
 
 ## 📋 Table of Contents
 
