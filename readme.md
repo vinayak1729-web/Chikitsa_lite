@@ -656,7 +656,8 @@ All images and visual content are available in the `static/images/` directory:
 ### 🤖 Multimodal AI Status
 
 <div align="center">
-<img src="static/image/unsloth.png" width="400" alt="Unsloth Confirmation">
+<img src="static/images/unsloth.png" width="400" alt="Unsloth Confirmation">
+
     
 </div>
 
