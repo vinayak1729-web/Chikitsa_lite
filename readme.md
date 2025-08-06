@@ -4,7 +4,7 @@
 
 # Privacy-First Mental Health AI
 
-[![Google GenAI Hackathon 2024 Winner](https://img.shields.io/badge/Winner-Google_GenAI_Hackathon_2024-4285F4?style=flat-square&logo=google)](https://developers.google.com/ai)
+[![Google GenAI Hackathon 2024 Winner.](https://img.shields.io/badge/Winner-Google_GenAI_Hackathon_2024-4285F4?style=flat-square&logo=google)](https://developers.google.com/ai)
 [![MeitY Recognized](https://img.shields.io/badge/Recognized-MeitY-FF6B35?style=flat-square)](https://www.meity.gov.in/)
 [![Python 3.8+](https://img.shields.io/badge/Python-3.8+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![Flask 2.3.3](https://img.shields.io/badge/Flask-2.3.3-000000?style=flat-square&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
