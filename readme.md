@@ -226,7 +226,7 @@ graph TB
 **Tap-Impulse Test**: A revolutionary cognitive assessment game with multimodal analysis
 
 <div align="center">
-<img src="static/images/tap_implulse.png" width="400" alt="Tap Impulse Game">
+<img src="static/images/tap_impulse.jpg" width="400" alt="Tap Impulse Game">
 <img src="static/images/game_analysis.png" width="400" alt="Game Analysis">
 </div>
 
@@ -462,7 +462,7 @@ Before installing Chikitsa Lite, ensure you have:
 ### 🎮 Using the Tap-Impulse Game
 
 <div align="center">
-<img src="static/images/home.png" width="400" alt="Home">
+<img src="static/images/tap_impulse.jpg" width="400" alt="game">
 </div>
 
 The Tap-Impulse Test is based on the Stroop Effect and measures:
@@ -525,7 +525,6 @@ Your comprehensive wellness report includes:
 | **Homepage** | <img src="static/images/index.png" width="400" alt="Home"> |
 | **Journey Flow** | <img src="static/images/index_journey.png" width="400" alt="Journey"> |
 | **Mood Analytics** | <img src="static/images/mood_analystics.png" width="400" alt="Mood"> |
-| **Medical Integration** | <img src="static/images/meldrx_connect.png" width="400" alt="Medical Connection"> |
 | **Application Thumbnail** | <img src="static/images/thumbnail.png" width="400" alt="Thumbnail"> |
 
 </div>
