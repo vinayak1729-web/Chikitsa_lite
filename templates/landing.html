@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chikitsa - Revolutionizing Mental Healthcare with AI</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --success-color: #4ade80;
+            --warning-color: #fbbf24;
+            --danger-color: #f87171;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 6rem 0;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .awards {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .award-badge {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Problem Section */
+        .problem-section {
+            background: var(--bg-white);
+            padding: 6rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: var(--text-dark);
+        }
+
+        .problem-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Chart Section */
+        .charts-section {
+            background: var(--bg-light);
+            padding: 6rem 0;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .chart-card {
+            background: var(--bg-white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        /* Solution Section */
+        .solution-section {
+            background: var(--bg-white);
+            padding: 6rem 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .feature-card.working {
+            border-color: var(--success-color);
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%);
+        }
+
+        .feature-card.limited {
+            border-color: var(--warning-color);
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-card.working .feature-icon {
+            color: var(--success-color);
+        }
+
+        .feature-card.limited .feature-icon {
+            color: var(--warning-color);
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-working {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-limited {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        /* Deployment Info */
+        .deployment-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Team Section */
+        .team-section {
+            background: var(--bg-white);
+            padding: 6rem 0;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .team-card {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .team-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-card {
+                padding: 1rem;
+            }
+            
+            .awards {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav container">
+            <div class="logo">
+                <i class="fas fa-brain"></i> CHIKITSA
+            </div>
+            <ul class="nav-links">
+                <li><a href="#problem">Problem</a></li>
+                <li><a href="#solution">Solution</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#team">Team</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content fade-in">
+                <h1>Revolutionizing Mental Healthcare with AI</h1>
+                <p>Privacy-first mental health platform powered by cutting-edge AI technology. Democratizing access to psychological support through innovative behavioral analysis.</p>
+                
+                <a href="https://vishal369.pythonanywhere.com/" class="cta-button" target="_blank">
+                    <i class="fas fa-rocket"></i> Experience Chikitsa Now
+                </a>
+                
+                <div class="awards">
+                    <div class="award-badge">
+                        <i class="fab fa-google"></i> Google GenAI Winner 2024
+                    </div>
+                    <div class="award-badge">
+                        <i class="fas fa-medal"></i> MeitY Recognized
+                    </div>
+                    <div class="award-badge">
+                        <i class="fas fa-users"></i> 50+ Beta Users
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem-section" id="problem">
+        <div class="container">
+            <h2 class="section-title">The Mental Health Crisis</h2>
+            <div class="problem-stats">
+                <div class="stat-card">
+                    <div class="stat-number">970M</div>
+                    <div class="stat-label">People globally affected by mental health disorders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">52%</div>
+                    <div class="stat-label">Of India's youth impacted by mental health issues</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">₹87T</div>
+                    <div class="stat-label">Productivity loss in India (2012-2030)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">171K</div>
+                    <div class="stat-label">Mental health incidents reported in India (2022)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Charts Section -->
+    <section class="charts-section">
+        <div class="container">
+            <h2 class="section-title">Market Analysis & Performance</h2>
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">Market Opportunity</h3>
+                    <canvas id="marketChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Target Customer Segments</h3>
+                    <canvas id="customerChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Platform Performance Metrics</h3>
+                    <canvas id="performanceChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Barriers in Mental Healthcare</h3>
+                    <canvas id="barriersChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="solution-section" id="solution">
+        <div class="container">
+            <h2 class="section-title">Our Solution: Chikitsa Platform</h2>
+            
+            <div class="deployment-info">
+                <h3 style="margin-bottom: 1rem;">🚀 Live Deployment Status</h3>
+                <div class="info-box">
+                    <h4>Currently Deployed on PythonAnywhere</h4>
+                    <p>Experience the core features of Chikitsa at <strong>vishal369.pythonanywhere.com</strong></p>
+                    <p>Some advanced features are limited due to deployment constraints, but the core AI-powered mental health support is fully functional!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" style="background: var(--bg-light); padding: 6rem 0;">
+        <div class="container">
+            <h2 class="section-title">Platform Features</h2>
+            
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <div style="display: inline-flex; gap: 2rem; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="width: 15px; height: 15px; background: var(--success-color); border-radius: 50%;"></div>
+                        <span>Fully Functional</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div style="width: 15px; height: 15px; background: var(--warning-color); border-radius: 50%;"></div>
+                        <span>Limited on PythonAnywhere</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card working">
+                    <span class="feature-status status-working">✓ Working</span>
+                    <i class="fas fa-robot feature-icon"></i>
+                    <h3 class="feature-title">AI Chatbot (Seraphis)</h3>
+                    <p>Advanced AI-powered mental health support with Gemma 3n model. Provides 24/7 empathetic counseling and guidance.</p>
+                </div>
+                
+                <div class="feature-card working">
+                    <span class="feature-status status-working">✓ Working</span>
+                    <i class="fas fa-clipboard-list feature-icon"></i>
+                    <h3 class="feature-title">Comprehensive Questionnaires</h3>
+                    <p>Validated mental health assessments with 87% diagnostic accuracy. Combines closed and open-ended questions.</p>
+                </div>
+                
+                <div class="feature-card working">
+                    <span class="feature-status status-working">✓ Working</span>
+                    <i class="fas fa-chart-bar feature-icon"></i>
+                    <h3 class="feature-title">Wellness Reports</h3>
+                    <p>Detailed psychological assessments and progress tracking with actionable insights and recommendations.</p>
+                </div>
+                
+                <div class="feature-card working">
+                    <span class="feature-status status-working">✓ Working</span>
+                    <i class="fas fa-calendar-check feature-icon"></i>
+                    <h3 class="feature-title">Appointment Booking</h3>
+                    <p>Seamless doctor consultation scheduling with email notifications and calendar integration.</p>
+                </div>
+                
+                <div class="feature-card working">
+                    <span class="feature-status status-working">✓ Working</span>
+                    <i class="fas fa-brain feature-icon"></i>
+                    <h3 class="feature-title">Mood Analytics</h3>
+                    <p>Advanced mood pattern recognition and longitudinal mental health tracking capabilities.</p>
+                </div>
+                
+                <div class="feature-card working">
+                    <span class="feature-status status-working">✓ Working</span>
+                    <i class="fas fa-om feature-icon"></i>
+                    <h3 class="feature-title">Meditation & Wellness</h3>
+                    <p>Guided meditation sessions with progress tracking and integrated Bhagavad Gita wisdom teachings.</p>
+                </div>
+                
+                <div class="feature-card limited">
+                    <span class="feature-status status-limited">⚠ Limited</span>
+                    <i class="fas fa-eye feature-icon"></i>
+                    <h3 class="feature-title">Real-time Emotion Detection</h3>
+                    <p>Facial emotion recognition during conversations. Limited due to camera access restrictions on PythonAnywhere.</p>
+                </div>
+                
+                <div class="feature-card limited">
+                    <span class="feature-status status-limited">⚠ Limited</span>
+                    <i class="fas fa-gamepad feature-icon"></i>
+                    <h3 class="feature-title">Gamified Tap-Impulse Test</h3>
+                    <p>Cognitive assessment game with behavioral recording. Video/audio features limited on deployment platform.</p>
+                </div>
+                
+                <div class="feature-card limited">
+                    <span class="feature-status status-limited">⚠ Limited</span>
+                    <i class="fas fa-video feature-icon"></i>
+                    <h3 class="feature-title">Multimodal Behavioral Analysis</h3>
+                    <p>Video/audio behavioral pattern analysis. Full capabilities available in local deployment only.</p>
+                </div>
+                
+                <div class="feature-card limited">
+                    <span class="feature-status status-limited">⚠ Limited</span>
+                    <i class="fas fa-route feature-icon"></i>
+                    <h3 class="feature-title">Interactive Wellness Journey</h3>
+                    <p>Personalized wellness path visualization. Some interactive elements limited by deployment constraints.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section" id="team">
+        <div class="container">
+            <h2 class="section-title">Team Surya Prabha</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">VS</div>
+                    <h3>Vinayak Shinde</h3>
+                    <p>Founder & Lead Developer</p>
+                    <p style="font-size: 0.9rem; color: var(--text-light);">AI/ML, Full-Stack Development</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">VM</div>
+                    <h3>Vishal Mishra</h3>
+                    <p>Co-Founder</p>
+                    <p style="font-size: 0.9rem; color: var(--text-light);">Backend Engineering, Data Science</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">NB</div>
+                    <h3>Nikhil Bhoir</h3>
+                    <p>Developer</p>
+                    <p style="font-size: 0.9rem; color: var(--text-light);">Frontend, Web Development</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="mailto:team.surya.prabha@gmail.com">
+                    <i class="fas fa-envelope"></i> Contact Us
+                </a>
+                <a href="https://youtube.com/@teamsuryaprabha" target="_blank">
+                    <i class="fab fa-youtube"></i> YouTube
+                </a>
+                <a href="tel:+917000107054">
+                    <i class="fas fa-phone"></i> +91 7000107054
+                </a>
+            </div>
+            <p>&copy; 2024 Team Surya Prabha. Mental health for everyone, everywhere.</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">
+                Winner of Google GenAI Exchange Hackathon 2024 | Recognized by MeitY
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize charts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+        });
+
+        function initializeCharts() {
+            // Market Opportunity Chart
+            const marketCtx = document.getElementById('marketChart').getContext('2d');
+            new Chart(marketCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['India TAM', 'India SAM', 'Global TAM', 'Global SAM'],
+                    datasets: [{
+                        label: 'Market Size (Billions ₹)',
+                        data: [37, 14, 567, 650],
+                        backgroundColor: [
+                            'rgba(102, 126, 234, 0.8)',
+                            'rgba(118, 75, 162, 0.8)',
+                            'rgba(240, 147, 251, 0.8)',
+                            'rgba(74, 222, 128, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(102, 126, 234, 1)',
+                            'rgba(118, 75, 162, 1)',
+                            'rgba(240, 147, 251, 1)',
+                            'rgba(74, 222, 128, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Customer Segments Chart
+            const customerCtx = document.getElementById('customerChart').getContext('2d');
+            new Chart(customerCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['B2C Individuals', 'B2B Corporates', 'Educational Institutions'],
+                    datasets: [{
+                        data: [60, 30, 10],
+                        backgroundColor: [
+                            'rgba(102, 126, 234, 0.8)',
+                            'rgba(118, 75, 162, 0.8)',
+                            'rgba(240, 147, 251, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(102, 126, 234, 1)',
+                            'rgba(118, 75, 162, 1)',
+                            'rgba(240, 147, 251, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Performance Metrics Chart
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(performanceCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Diagnostic Accuracy', 'User Retention', 'Appointment Booking', 'User Satisfaction', 'Engagement'],
+                    datasets: [{
+                        label: 'Chikitsa Performance (%)',
+                        data: [87, 90, 85, 94, 88],
+                        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(102, 126, 234, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(102, 126, 234, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: false
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // Barriers Chart
+            const barriersCtx = document.getElementById('barriersChart').getContext('2d');
+            new Chart(barriersCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['High Costs', 'Limited Access', 'Privacy Concerns', 'Social Stigma', 'Low Engagement'],
+                    datasets: [{
+                        data: [25, 20, 20, 20, 15],
+                        backgroundColor: [
+                            'rgba(248, 113, 113, 0.8)',
+                            'rgba(251, 191, 36, 0.8)',
+                            'rgba(139, 92, 246, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(16, 185, 129, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(248, 113, 113, 1)',
+                            'rgba(251, 191, 36, 1)',
+                            'rgba(139, 92, 246, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(16, 185, 129, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Add floating action for quick access
+        const floatingBtn = document.createElement('div');
+        floatingBtn.style.cssText = `
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        `;
+        floatingBtn.innerHTML = '<i class="fas fa-rocket"></i>';
+        floatingBtn.onclick = () => window.open('https://vishal369.pythonanywhere.com/', '_blank');
+        floatingBtn.onmouseover = () => floatingBtn.style.transform = 'scale(1.1)';
+        floatingBtn.onmouseout = () => floatingBtn.style.transform = 'scale(1)';
+        document.body.appendChild(floatingBtn);
+    </script>
+</body>
+</html>
